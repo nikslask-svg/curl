@@ -1,0 +1,1 @@
+curl --request GET --url https://api.getguru.com/api/v1/cards/3779caa3-4f4d-4eb4-97a3-32bae66fac73 --header "Authorization: token  15b5acff-1fa0-4bc6-a8ab-e645fe541d89 " --header "Content-Type: application/json"
