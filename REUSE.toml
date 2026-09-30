@@ -57,3 +57,8 @@ SPDX-License-Identifier = "Apache-2.0"
 path = [".claude/skills/taste-skill/**"]
 SPDX-FileCopyrightText = "Copyright (c) 2026 Leonxlnx"
 SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["proofdesk/**"]
+SPDX-FileCopyrightText = "Copyright (c) 2026 nikslask-svg"
+SPDX-License-Identifier = "LicenseRef-Proprietary"

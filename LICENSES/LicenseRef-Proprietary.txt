@@ -1,0 +1,4 @@
+Copyright (c) 2026 nikslask-svg. All rights reserved.
+
+No license is granted to use, copy, modify or distribute this software
+except with the prior written permission of the copyright holder.

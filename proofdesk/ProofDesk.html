@@ -1,0 +1,3255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="version" content="21 (2026-09-30)" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%232f6690%22/%3E%3Cpath%20d%3D%22M11%207.5h7.5l4.5%204.5v12.5H11z%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.8%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M18.5%207.5V12H23%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.8%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M13.8%2018.2l2.2%202.2%203.8-4.4%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E" />
+<title>ProofDesk · Legalization Proof & UBO review</title>
+<style>
+:root{
+  color-scheme: light dark;
+  --ink:#1c2a33; --paper:#f4f6f5; --raised:#ffffff; --line:#d9dfe1; --line-strong:#bfc9cd; --muted:#5b6b73;
+  --entity:#2f6690; --entity-soft:#dbe7ee;
+  --person:#8f5516; --person-soft:#f1decb;
+  --ok:#336b4e; --ok-soft:#dcece3;
+  --warn:#825f17; --warn-soft:#f3e6cd;
+  --danger:#b3452c; --danger-soft:#f4ded7;
+  --purple:#6c4fa3; --purple-soft:#e8e1f3;
+  --root:#3a4a52; --root-soft:#e4e9ea;
+  --code-bg:#eef1f0; --code-ink:#24343d;
+  --shadow: 0 1px 2px rgba(28,42,51,.06), 0 2px 6px -2px rgba(28,42,51,.08);
+  --ring: 0 0 0 3px color-mix(in srgb, var(--entity) 24%, transparent);
+  --r-lg:12px; --r-md:10px; --r-sm:8px; --r-xs:6px;
+  --ease-out: cubic-bezier(.23,1,.32,1);
+  --serif: "Iowan Old Style","Palatino Linotype","Book Antiqua",Georgia,serif;
+  --sans: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono: ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ink:#e8edf0; --paper:#12171b; --raised:#1a2126; --line:#2a343c; --line-strong:#3a4650; --muted:#8fa0a8;
+    --entity:#74aed0; --entity-soft:#223642;
+    --person:#dda05e; --person-soft:#3a2c1c;
+    --ok:#63b28c; --ok-soft:#1d3128;
+    --warn:#cfa452; --warn-soft:#382c17;
+    --danger:#e08668; --danger-soft:#3a241d;
+    --purple:#b39ee0; --purple-soft:#2c2440;
+    --root:#c7d2d6; --root-soft:#232c31;
+    --code-bg:#0f1418; --code-ink:#cdd9e0;
+    --shadow: 0 1px 2px rgba(0,0,0,.35);
+  }
+}
+
+/* ---------- base & browser surfaces ---------- */
+*{box-sizing:border-box;}
+html,body{overflow-x:clip;}
+html{-webkit-text-size-adjust:100%;scrollbar-color:var(--line-strong) transparent;}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);margin:0;padding:2rem 1.4rem 6rem;font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;caret-color:var(--entity);}
+::selection{background:color-mix(in srgb, var(--entity) 26%, transparent);color:inherit;}
+.wrap{max-width:1320px;margin:0 auto;}
+@media (max-width:640px){body{padding:1.2rem 1rem 5rem;}}
+
+/* ---------- type ---------- */
+.brand{display:flex;align-items:center;gap:.85rem;}
+.brand-mark{flex:none;width:44px;height:44px;filter:drop-shadow(0 1px 1px rgba(28,42,51,.12)) drop-shadow(0 4px 10px color-mix(in srgb, var(--entity) 28%, transparent));}
+.bm-bg{fill:var(--entity);}
+.bm-line{fill:none;stroke:var(--raised);stroke-width:1.8;stroke-linejoin:round;}
+.bm-check{fill:none;stroke:var(--raised);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+h1.wordmark{font-size:1.9rem;line-height:1;letter-spacing:-.02em;margin:0 0 .3rem;}
+.wm-a{font-weight:700;color:var(--ink);}
+.wm-b{font-weight:500;color:var(--entity);}
+.brand .lede{font-size:.9rem;}
+header.page-head .version-tag{margin-left:calc(44px + .85rem);}
+@media (max-width:640px){ .brand-mark{width:38px;height:38px;} h1.wordmark{font-size:1.6rem;} header.page-head .version-tag{margin-left:0;} }
+@media (prefers-color-scheme: dark){ .bm-line,.bm-check{stroke:#0f1a20;} }
+/* brand banner: full-bleed image strip; content below keeps the page theme */
+header.page-head.banner{width:100vw;margin-left:calc(50% - 50vw);margin-top:-2rem;margin-bottom:1.6rem;
+  padding:2.2rem max(1.4rem, calc(50vw - 660px)) 1.9rem;min-height:210px;align-items:center;
+  position:relative;overflow:hidden;isolation:isolate;
+  background:radial-gradient(120% 140% at 12% -20%, rgba(56,190,230,.16), transparent 55%), #07131b;
+  box-shadow:0 1px 0 rgba(255,255,255,.04), 0 10px 30px -18px rgba(0,0,0,.55);}
+.banner .wm-a{color:#f3f7f9;}
+.banner .wm-b{color:#7fd3ea;}
+.banner .lede{color:rgba(228,238,243,.86);}
+.banner .version-tag{color:rgba(228,238,243,.78);border-color:rgba(228,238,243,.28);background:rgba(4,13,19,.35);}
+.banner .bm-bg{fill:#1f86ad;}
+.banner .bm-line,.banner .bm-check{stroke:#fff;}
+.banner .brand-mark{filter:drop-shadow(0 4px 14px rgba(56,190,230,.35));}
+.banner button.clear-all{background:rgba(4,13,19,.55);color:#ffb4a3;border-color:rgba(255,180,163,.45);backdrop-filter:blur(4px);}
+@media (hover:hover) and (pointer:fine){ .banner button.clear-all:hover{background:rgba(179,69,44,.35);color:#ffd9d0;} }
+@media (max-width:640px){
+  header.page-head.banner{margin-top:-1.2rem;padding:1.6rem 1rem 1.4rem;min-height:0;}
+}
+@media print{ header.page-head.banner{background:none !important;box-shadow:none;} }
+header.page-head{margin:0 0 1.6rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;}
+.head-actions{display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;}
+button.clear-all{color:var(--danger);border-color:color-mix(in srgb, var(--danger) 40%, var(--line));}
+@media (hover:hover) and (pointer:fine){ button.clear-all:hover{background:var(--danger-soft);color:var(--danger);border-color:color-mix(in srgb, var(--danger) 60%, transparent);} }
+.notice-dialog{width:min(560px, calc(100vw - 32px));max-height:calc(100dvh - 48px);overflow:auto;border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:1.4rem 1.5rem 1.2rem;background:var(--raised);color:var(--ink);box-shadow:0 24px 64px -24px rgba(0,0,0,.45);
+  transition:opacity 180ms var(--ease-out), transform 180ms var(--ease-out);}
+.notice-dialog::backdrop{background:rgba(12,18,22,.45);}
+@starting-style{ .notice-dialog[open]{opacity:0;transform:scale(.97);} }
+@media (prefers-reduced-motion: reduce){ @starting-style{ .notice-dialog[open]{transform:none;} } }
+.notice-dialog h2{font-size:1.1rem;margin:.1rem 0 .5rem;color:var(--ink);text-transform:none;letter-spacing:0;display:block;}
+.notice-dialog h3{font-size:.82rem;margin:1rem 0 .4rem;}
+.notice-kind{margin:0;font-size:.74rem;font-weight:700;color:var(--warn);}
+.notice-lead{margin:0 0 .6rem;font-size:.88rem;line-height:1.5;}
+.notice-list{margin:.2rem 0 0 1.1rem;padding:0;font-size:.82rem;line-height:1.5;}
+.notice-list li{margin:.2rem 0;}
+.notice-box{background:var(--paper);border-radius:var(--r-sm);padding:.6rem .8rem;margin:.5rem 0;font-size:.82rem;}
+.notice-box.warn{background:var(--warn-soft);color:var(--warn);}
+.notice-foot{font-size:.78rem;color:var(--muted);margin:1rem 0 0;}
+.notice-actions{justify-content:flex-end;margin-top:1rem;}
+.rf-summary{border:1px solid color-mix(in srgb, var(--danger) 35%, var(--line));background:color-mix(in srgb, var(--danger-soft) 55%, var(--raised));
+  border-radius:var(--r-lg);padding:1rem 1.2rem .9rem;margin:0 0 1.2rem;}
+.rfs-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.6rem;}
+.rf-summary h2{margin:0;color:var(--danger);font-size:.98rem;}
+.rfs-outcome{margin:.2rem 0 0;font-family:var(--mono);font-size:.78rem;font-weight:600;color:var(--ink);}
+.rfs-outcome:empty{display:none;}
+.rfs-list{margin:0;padding:0 0 0 1.6rem;display:grid;grid-template-columns:repeat(auto-fill, minmax(340px, 1fr));gap:.2rem 1.4rem;}
+.rfs-list li{font-size:.8rem;line-height:1.4;padding:.25rem 0;color:var(--muted);}
+.rfs-list li::marker{color:var(--danger);font-weight:700;font-variant-numeric:tabular-nums;}
+.rfs-code{font-family:var(--mono);font-size:.78rem;font-weight:700;color:var(--ink);background:none;border:none;padding:0;cursor:pointer;text-align:left;
+  text-decoration:underline;text-decoration-color:color-mix(in srgb, var(--danger) 45%, transparent);text-underline-offset:3px;word-break:break-all;}
+.rfs-code:focus-visible{outline:2px solid var(--entity);outline-offset:2px;border-radius:3px;}
+.rfs-desc{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rfs-state{display:inline-block;margin-left:.4rem;font-size:.66rem;font-weight:700;padding:.05rem .45rem;border-radius:99px;vertical-align:1px;}
+.rfs-state.open{background:var(--warn-soft);color:var(--warn);}
+.rfs-state.resolved{background:var(--ok-soft);color:var(--ok);}
+.rfs-state.false{background:var(--root-soft);color:var(--muted);}
+.rfs-state.blocked{background:var(--danger-soft);color:var(--danger);}
+.rf-chip{margin-left:.35rem;}
+.decision-seg{display:flex;flex-wrap:wrap;gap:.4rem;}
+.dec{display:inline-flex;align-items:center;gap:.4rem;padding:.42rem .8rem;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--raised);
+  color:var(--muted);font-size:.8rem;font-weight:650;}
+.dec svg{opacity:.7;}
+@media (hover:hover) and (pointer:fine){ .dec:hover{border-color:var(--line-strong);color:var(--ink);} }
+.dec[aria-pressed="true"] svg{opacity:1;}
+.dec-ok[aria-pressed="true"]{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);}
+.dec-false[aria-pressed="true"]{background:var(--root-soft);border-color:var(--line-strong);color:var(--ink);}
+.dec-blocked[aria-pressed="true"]{background:var(--danger-soft);border-color:var(--danger);color:var(--danger);}
+input.pct-bad{border-color:var(--danger) !important;box-shadow:0 0 0 3px color-mix(in srgb, var(--danger) 18%, transparent) !important;}
+.rf-notes{font-family:var(--sans);font-size:.84rem;min-height:0;}
+.rf-notes-hint{margin:.3rem 0 0;font-size:.74rem;color:var(--muted);}
+.rf-notes-hint:empty{display:none;}
+.needs-note .rf-notes{border-color:var(--warn);box-shadow:0 0 0 3px color-mix(in srgb, var(--warn) 18%, transparent);}
+.needs-note .rf-notes-hint,.needs-note .rf-notes-req{color:var(--warn);font-weight:600;}
+.outcome-hint{margin:.2rem 0 0;font-size:.8rem;line-height:1.45;padding:.6rem .8rem;border-radius:var(--r-sm);}
+.outcome-hint ul{margin:.3rem 0 .2rem 1.1rem;padding:0;}
+.outcome-hint li{margin:.1rem 0;word-break:break-word;}
+.outcome-hint.open{background:var(--warn-soft);color:var(--warn);}
+.outcome-hint.blocked{background:var(--danger-soft);color:var(--danger);}
+.outcome-hint.ok{background:var(--ok-soft);color:var(--ok);}
+@media (max-width:640px){ .rfs-list{grid-template-columns:1fr;} }
+.undo-toast{display:flex;align-items:center;gap:.6rem;padding:.4rem .5rem .4rem .8rem;border-radius:var(--r-sm);background:var(--ink);color:var(--paper);font-size:.8rem;
+  box-shadow:0 4px 14px -6px rgba(0,0,0,.35);transition:opacity 180ms var(--ease-out), transform 180ms var(--ease-out);}
+.undo-toast button.small{background:transparent;color:var(--paper);border-color:color-mix(in srgb, var(--paper) 45%, transparent);}
+@starting-style{ .undo-toast{opacity:0;transform:translateY(-4px);} }
+@media (prefers-reduced-motion: reduce){ @starting-style{ .undo-toast{transform:none;} } }
+h1{font-family:var(--serif);font-weight:600;font-size:1.65rem;line-height:1.15;letter-spacing:-.01em;margin:0 0 .3rem;text-wrap:balance;}
+.lede{font-size:.88rem;color:var(--muted);margin:0;max-width:65ch;}
+.version-tag{display:inline-block;margin:.5rem 0 0;padding:.12rem .5rem;border-radius:99px;border:1px solid var(--line);font-size:.72rem;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;}
+h2{font-family:var(--sans);font-size:.95rem;font-weight:700;letter-spacing:-.005em;color:var(--ink);margin:0 0 1rem;display:flex;align-items:center;gap:.6rem;text-wrap:balance;}
+h2 .n{flex:none;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--entity-soft);color:var(--entity);font-size:.7rem;font-weight:800;font-variant-numeric:tabular-nums;}
+h2 .opt{font-weight:500;color:var(--muted);}
+h3{font-size:.82rem;font-weight:700;color:var(--ink);margin:0 0 .6rem;}
+
+/* ---------- surfaces ---------- */
+.panel{background:var(--raised);border:1px solid var(--line);border-radius:var(--r-lg);padding:1.3rem 1.4rem 1.2rem;box-shadow:var(--shadow);margin-bottom:1.2rem;}
+@media (max-width:640px){.panel{padding:1.1rem 1rem 1rem;}}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.2rem .9rem;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.2rem .9rem;}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.2rem .9rem;}
+.seed-grid{gap:1.2rem;}
+@media (max-width:860px){.grid2,.grid3,.grid4{grid-template-columns:1fr;}}
+.sep{height:1px;background:var(--line);margin:1.2rem 0;}
+
+/* ---------- fields ---------- */
+.field{margin-bottom:.8rem;}
+.field label,.group-label{display:block;font-size:.7rem;font-weight:650;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:.32rem;}
+.group-label{margin-bottom:.5rem;}
+.field label .opt,.group-label .opt{text-transform:none;font-weight:400;letter-spacing:0;}
+/* case panels ask full questions: keep them in sentence case so they read as sentences */
+#case2Panel .field label,#case3Panel .field label{text-transform:none;letter-spacing:0;font-size:.8rem;font-weight:600;color:var(--ink);line-height:1.4;}
+input[type=text],input[type=number],input[type=date],select,textarea{
+  width:100%;padding:.5rem .65rem;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:.86rem;line-height:1.35;
+  transition:border-color 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+}
+input[type=number],input[type=date]{font-variant-numeric:tabular-nums;}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:.8;}
+textarea{font-family:var(--mono);font-size:.78rem;min-height:68px;resize:vertical;}
+@media (hover:hover) and (pointer:fine){
+  input[type=text]:hover,input[type=number]:hover,input[type=date]:hover,select:hover,textarea:hover{border-color:var(--line-strong);}
+}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid transparent;border-color:var(--entity);box-shadow:var(--ring);}
+input:disabled,select:disabled,textarea:disabled{opacity:.55;cursor:not-allowed;}
+input.prefilled,select.prefilled{border-color:color-mix(in srgb, var(--entity) 55%, var(--line));background:var(--entity-soft);}
+input[type=file]{font-family:var(--sans);font-size:.8rem;color:var(--muted);max-width:100%;}
+input[type=file]::file-selector-button{font:inherit;font-weight:600;color:var(--ink);background:var(--raised);border:1px solid var(--line);border-radius:var(--r-xs);padding:.35rem .7rem;margin-right:.6rem;cursor:pointer;transition:border-color 120ms ease;}
+input[type=checkbox],input[type=radio]{accent-color:var(--entity);width:15px;height:15px;margin:0;flex:none;}
+.checkline{display:flex;align-items:center;gap:.5rem;font-size:.84rem;font-weight:500;margin-bottom:.45rem;min-height:26px;cursor:pointer;}
+.checkline input[type=text]{width:auto;flex:1;margin-left:.3rem;}
+
+/* ---------- buttons ---------- */
+button{font-family:var(--sans);cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:transform 140ms var(--ease-out), background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;}
+button:active:not(:disabled){transform:scale(.97);}
+button:focus-visible{outline:2px solid var(--entity);outline-offset:2px;}
+button.primary{background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:var(--r-sm);padding:.55rem 1.05rem;font-weight:700;font-size:.82rem;}
+button.ghost{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:var(--r-sm);padding:.52rem .9rem;font-size:.8rem;font-weight:600;}
+button.outline{background:var(--raised);border:1px solid var(--line);color:var(--ink);border-radius:var(--r-sm);padding:.48rem .85rem;font-size:.8rem;font-weight:600;}
+button.small{padding:.3rem .6rem;font-size:.72rem;font-weight:600;border-radius:var(--r-xs);border:1px solid var(--line);background:var(--raised);color:var(--muted);}
+button.small.danger{color:var(--danger);border-color:color-mix(in srgb, var(--danger) 40%, transparent);}
+@media (hover:hover) and (pointer:fine){
+  button.primary:hover{background:color-mix(in srgb, var(--ink) 88%, var(--entity));}
+  button.ghost:hover,button.outline:hover,button.small:hover{border-color:var(--line-strong);color:var(--ink);}
+  button.small.danger:hover{background:var(--danger-soft);color:var(--danger);border-color:color-mix(in srgb, var(--danger) 55%, transparent);}
+  input[type=file]::file-selector-button:hover{border-color:var(--line-strong);}
+}
+button:disabled{opacity:.45;cursor:not-allowed;}
+.btnrow{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-top:.7rem;}
+.row-actions{display:flex;gap:.3rem;}
+
+/* ---------- badges ---------- */
+.badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;letter-spacing:.01em;padding:.16rem .5rem;border-radius:99px;font-weight:650;white-space:nowrap;margin:0 .15rem .2rem 0;}
+.badge.share{background:var(--warn-soft);color:var(--warn);}
+.badge.ubo{background:var(--ok-soft);color:var(--ok);}
+.badge.tag{background:var(--entity-soft);color:var(--entity);}
+.badge.verified{background:var(--ok-soft);color:var(--ok);}
+.badge.unverified{background:var(--root-soft);color:var(--muted);}
+
+/* ---------- notes ---------- */
+.note{font-size:.78rem;color:var(--muted);line-height:1.55;margin:.5rem 0;max-width:75ch;}
+.note.dashed{padding:.6rem .75rem;border:1px dashed var(--line-strong);border-radius:var(--r-sm);background:var(--paper);}
+.note.lead{margin-top:-.4rem;margin-bottom:1rem;}
+.status-line{font-size:.78rem;color:var(--muted);margin-top:.6rem;min-height:1em;}
+.upload-box.has-data .status-line{color:var(--ok);}
+
+/* ---------- tables ---------- */
+.table-scroll{overflow-x:auto;margin:0 -.2rem;padding:0 .2rem;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;font-size:.8rem;font-variant-numeric:tabular-nums;}
+thead th{text-align:left;font-size:.72rem;font-weight:650;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);border-bottom:1px solid var(--line-strong);padding:.45rem .5rem;white-space:nowrap;}
+tbody td{padding:.55rem .5rem;border-bottom:1px solid var(--line);vertical-align:top;}
+tbody tr:last-child td{border-bottom:none;}
+@media (hover:hover) and (pointer:fine){ tbody tr:hover td{background:color-mix(in srgb, var(--paper) 60%, transparent);} }
+.table-empty{font-size:.82rem;color:var(--muted);padding:.8rem .2rem;}
+td.cell-muted{font-size:.74rem;color:var(--muted);}
+td.cell-strong{font-weight:600;}
+td.cell-index{color:var(--muted);font-size:.74rem;white-space:nowrap;}
+input.pct-inline{width:96px;padding:.32rem .5rem;font-size:.85rem;}
+
+/* ---------- scenario switcher ---------- */
+.scenario-toggle{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.4rem;}
+@media (max-width:860px){.scenario-toggle{grid-template-columns:1fr;}}
+.scenario-toggle button{padding:.8rem .9rem;border-radius:var(--r-md);border:1px solid var(--line);background:var(--raised);color:var(--muted);text-align:left;box-shadow:0 1px 2px rgba(28,42,51,.04);}
+.scenario-toggle button:active:not(:disabled){transform:scale(.985);}
+.scenario-toggle button .stitle{display:block;font-weight:700;font-size:.84rem;color:var(--ink);margin-bottom:.2rem;}
+.scenario-toggle button .sdesc{display:block;font-size:.74rem;line-height:1.45;color:var(--muted);}
+.scenario-toggle button.active{border-color:var(--entity);background:var(--entity-soft);box-shadow:inset 0 0 0 1px var(--entity);}
+.scenario-toggle button.active .stitle{color:var(--entity);}
+@media (hover:hover) and (pointer:fine){ .scenario-toggle button:not(.active):hover{border-color:var(--line-strong);} }
+
+/* ---------- inner groups (flat, no nested cards) ---------- */
+.upload-box{border:1.5px dashed var(--line-strong);border-radius:var(--r-md);padding:1rem;background:var(--paper);transition:border-color 200ms ease, background-color 200ms ease;}
+.upload-box.has-data{border-color:var(--ok);border-style:solid;background:var(--ok-soft);}
+.upload-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+.entity-form{border-radius:var(--r-md);padding:1rem 1.05rem .9rem;margin-bottom:1.2rem;background:var(--paper);}
+.entry-cards-head{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin:.4rem 0 .6rem;}
+.entry-cards-head h3{margin:0;}
+.entry-cards-head .btnrow{margin:0;}
+#entryCards{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem;}
+.entry-card{border-radius:var(--r-md);background:var(--paper);border:1px solid transparent;scroll-margin-top:1rem;transition:border-color 200ms ease;}
+.entry-card[open]{border-color:var(--line);}
+.entry-card > summary{display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;cursor:pointer;list-style:none;border-radius:var(--r-md);}
+.entry-card > summary::-webkit-details-marker{display:none;}
+.entry-card > summary:focus-visible{outline:2px solid var(--entity);outline-offset:2px;}
+.ec-num{flex:none;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--raised);color:var(--muted);font-size:.7rem;font-weight:700;font-variant-numeric:tabular-nums;border:1px solid var(--line);}
+.ec-title{flex:1;min-width:0;display:flex;flex-direction:column;}
+.ec-name{font-weight:700;font-size:.86rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ec-sub{font-size:.74rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ec-pct{flex:none;font-size:.82rem;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;min-width:3.5em;text-align:right;}
+.ec-body{padding:.2rem .9rem .8rem;border-top:1px solid var(--line);padding-top:.8rem;}
+.ec-body .checkline > input[type=text]{flex:1;width:auto;margin-left:.3rem;}
+@keyframes ecFlash{from{box-shadow:0 0 0 3px color-mix(in srgb, var(--entity) 45%, transparent);}to{box-shadow:0 0 0 3px transparent;}}
+.entry-card.ec-flash,.rf-block.ec-flash{animation:ecFlash 1.1s var(--ease-out);border-radius:var(--r-sm);}
+@media (prefers-reduced-motion: reduce){ .entry-card.ec-flash{animation:none;border-color:var(--entity);} }
+.act-block{border-top:1px solid var(--line);padding:1rem 0 .2rem;}
+.act-block:first-child{border-top:none;padding-top:.2rem;}
+.act-block h4{margin:0 0 .6rem;font-size:.84rem;font-weight:700;}
+.rf-block{border-top:1px solid var(--line);padding:.9rem 0 .2rem;position:relative;}
+.rf-block:first-child{border-top:none;padding-top:0;}
+.rf-block .rf-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;font-size:.84rem;}
+#redFlagList{margin-bottom:.6rem;}
+
+/* ---------- tabs ---------- */
+.tabs{display:inline-flex;gap:.2rem;margin:.4rem 0 .9rem;padding:.2rem;border-radius:99px;background:var(--paper);border:1px solid var(--line);}
+.tabs button{padding:.36rem .9rem;border-radius:99px;border:none;background:transparent;color:var(--muted);font-size:.76rem;font-weight:650;}
+.tabs button.active{background:var(--raised);color:var(--ink);box-shadow:0 1px 2px rgba(28,42,51,.12), 0 0 0 1px var(--line);}
+@media (hover:hover) and (pointer:fine){ .tabs button:not(.active):hover{color:var(--ink);} }
+
+/* ---------- diagram ---------- */
+.diagram-head{display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.6rem;}
+.diagram-head h3{margin:0;}
+.diagram-head .btnrow{margin:0;}
+#canvas{position:relative;width:100%;overflow:auto;max-height:78vh;background:var(--paper);border-radius:var(--r-md);overscroll-behavior:contain;}
+#canvas svg{display:block;margin:0 auto;}
+.diagram-empty{padding:1.4rem 1.2rem;margin:0;}
+.diagram-meta{margin:.15rem 0 0;font-size:.76rem;color:var(--muted);font-variant-numeric:tabular-nums;}
+.diagram-toolbar{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;margin:0 0 .6rem;}
+.diagram-toolbar .btnrow{margin:0;}
+.seg{display:inline-flex;gap:.15rem;padding:.18rem;border-radius:99px;background:var(--paper);border:1px solid var(--line);}
+.seg button{padding:.28rem .75rem;border-radius:99px;border:none;background:transparent;color:var(--muted);font-size:.74rem;font-weight:650;}
+.seg button.active{background:var(--raised);color:var(--ink);box-shadow:0 1px 2px rgba(28,42,51,.12), 0 0 0 1px var(--line);}
+@media (hover:hover) and (pointer:fine){ .seg button:not(.active):hover{color:var(--ink);} }
+.zoom{display:inline-flex;align-items:center;gap:.3rem;}
+.zoom button.small{min-width:30px;}
+#canvas .node-link{cursor:pointer;outline:none;}
+#canvas .node-link rect{transition:stroke-width 120ms ease;}
+@media (hover:hover) and (pointer:fine){ #canvas .node-link:hover rect{stroke-width:2.2px;} }
+#canvas .node-link:focus-visible rect{stroke-width:2.6px;}
+#diagramSection:fullscreen{background:var(--raised);padding:1.2rem 1.4rem;overflow:auto;}
+#diagramSection:fullscreen #canvas{max-height:calc(100vh - 150px);}
+.zoom-label{min-width:3.2em;text-align:center;font-size:.76rem;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;}
+
+/* ---------- banners ---------- */
+.suggestion-banner,.session-banner,.validation-banner{border-radius:var(--r-md);padding:.7rem .95rem;margin-bottom:1rem;font-size:.84rem;
+  transition:opacity 220ms var(--ease-out), transform 220ms var(--ease-out);}
+.suggestion-banner,.session-banner{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.suggestion-banner{background:var(--warn-soft);border:1px solid color-mix(in srgb, var(--warn) 35%, transparent);color:var(--warn);}
+.session-banner{background:var(--ok-soft);border:1px solid color-mix(in srgb, var(--ok) 35%, transparent);color:var(--ok);}
+.session-banner .banner-actions{display:flex;gap:.5rem;}
+.session-banner button{font-size:.76rem;font-weight:650;padding:.3rem .8rem;border-radius:var(--r-xs);border:1px solid currentColor;background:transparent;color:inherit;}
+.session-banner button.fill{background:var(--ok);border-color:var(--ok);color:var(--raised);}
+.validation-banner{background:var(--warn-soft);border:1px solid color-mix(in srgb, var(--warn) 35%, transparent);color:var(--warn);margin:.8rem 0 0;}
+.validation-banner ul{margin:.35rem 0 .35rem 1.2rem;padding:0;}
+.validation-banner small{color:inherit;opacity:.9;}
+@starting-style{
+  .suggestion-banner,.session-banner,.validation-banner{opacity:0;transform:translateY(-4px);}
+}
+
+/* ---------- export ---------- */
+.export-preview{width:100%;min-height:200px;font-family:var(--mono);font-size:.76rem;line-height:1.5;background:var(--code-bg);color:var(--code-ink);border:1px solid var(--line);border-radius:var(--r-sm);padding:.8rem .9rem;resize:vertical;}
+.save-indicator{font-size:.74rem;font-weight:600;color:var(--ok);opacity:0;margin-left:auto;transition:opacity 200ms var(--ease-out);}
+.two-col{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:1.2rem;align-items:start;}
+.two-col > *{min-width:0;}
+@media (max-width:1000px){.two-col{grid-template-columns:1fr;}}
+.hidden{display:none !important;}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{scroll-behavior:auto !important;}
+  button:active:not(:disabled),.scenario-toggle button:active:not(:disabled){transform:none;}
+  @starting-style{ .suggestion-banner,.session-banner,.validation-banner{transform:none;} }
+}
+
+/* ---------- print ---------- */
+@media print{
+  body{background:#fff !important;color:#000 !important;padding:0 !important;}
+  .wrap{max-width:100% !important;}
+  .panel,.entity-form,.upload-box,.scenario-toggle,.suggestion-banner,
+  .session-banner,.btnrow,#scenarioToggle,#suggestionBanner,#sessionRestoreBanner,
+  button,.diagram-head,[id$="Btn"],#exportPreview,#validationBanner,
+  .note{display:none !important;}
+  #printContent{display:block !important;}
+}
+#printContent{display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="page-head banner">
+    <div>
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect width="32" height="32" rx="8" class="bm-bg"/>
+          <path d="M11 7.5h7.5l4.5 4.5v12.5H11z" class="bm-line"/>
+          <path d="M18.5 7.5V12H23" class="bm-line"/>
+          <path d="M13.8 18.2l2.2 2.2 3.8-4.4" class="bm-check"/>
+        </svg>
+        <div>
+          <h1 class="wordmark"><span class="wm-a">Proof</span><span class="wm-b">Desk</span></h1>
+          <p class="lede">Review the Legalization Proof, map the UBOs, issue the KYC - Legalization Report.</p>
+        </div>
+      </div>
+      <p class="version-tag" title="Public build">v21 · 2026-09-30</p>
+    </div>
+    <div class="head-actions">
+      <button type="button" class="ghost clear-all" id="clearAllBtn">Clear all</button>
+      <div class="undo-toast hidden" id="undoToast" role="status" aria-live="polite">
+        <span>All fields cleared.</span>
+        <button type="button" class="small" id="undoClearBtn">Undo</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="scenario-toggle" id="scenarioToggle" role="group" aria-label="Case type">
+    <button type="button" data-s="1" class="active" aria-pressed="true">
+      <span class="stitle">Case 1: Valid legalization exists</span>
+      <span class="sdesc">Upload/paste the valid report, add shareholding &amp; company data, issue the KYC - Legalization Report.</span>
+    </button>
+    <button type="button" data-s="2" aria-pressed="false">
+      <span class="stitle">Case 2: Invalid report, needs fixing</span>
+      <span class="sdesc">Upload/paste the invalid report, resolve red flags &amp; representation, issue both reports.</span>
+    </button>
+    <button type="button" data-s="3" aria-pressed="false">
+      <span class="stitle">Case 3: Building from scratch</span>
+      <span class="sdesc">No existing report. Compile the legalization data manually, plus shareholding &amp; company data.</span>
+    </button>
+  </div>
+
+  <div id="suggestionBanner" class="suggestion-banner hidden" role="status">
+    <span id="suggestionText"></span>
+    <button class="small" id="acceptSuggestion">Switch to suggested case</button>
+  </div>
+
+  <section id="rfSummary" class="rf-summary hidden" aria-labelledby="rfSummaryTitle">
+    <div class="rfs-head">
+      <div>
+        <h2 id="rfSummaryTitle">Invalid report</h2>
+        <p class="rfs-outcome" id="rfsOutcome"></p>
+      </div>
+      <button type="button" class="small" id="rfsCopyBtn">Copy codes</button>
+    </div>
+    <ol class="rfs-list" id="rfsList"></ol>
+  </section>
+
+  <div id="sessionRestoreBanner" class="session-banner hidden" role="status">
+    <span>Unsaved session found. Restore your previous work?</span>
+    <div class="banner-actions">
+      <button type="button" class="fill" id="sessionRestoreBtn">Restore</button>
+      <button type="button" id="sessionDiscardBtn">Discard</button>
+    </div>
+  </div>
+
+  <div id="printContent"></div>
+
+  <dialog id="ownershipNotice" class="notice-dialog" aria-labelledby="noticeTitle" aria-describedby="noticeLead">
+    <form method="dialog">
+      <p class="notice-kind" id="noticeKind">Analyst notice</p>
+      <h2 id="noticeTitle"></h2>
+      <p id="noticeLead" class="notice-lead"></p>
+      <div id="noticeFound"></div>
+      <div id="noticeExtra"></div>
+      <h3>Where to find the shareholders</h3>
+      <ul id="noticeSources" class="notice-list"></ul>
+      <p class="notice-foot">Record the source you use in each entry's <strong>Source of information</strong>. Do not finalise the UBO determination until ownership is confirmed.</p>
+      <div class="btnrow notice-actions">
+        <button type="submit" value="close" class="ghost">Close</button>
+        <button type="submit" value="add" class="primary" id="noticeAddBtn">Add shareholder manually</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- SEED INPUTS -->
+  <div class="panel">
+    <h2><span class="n">1</span>Seed inputs <span class="opt">(optional)</span></h2>
+    <p class="note lead">Speeds up data entry. Everything stays editable.</p>
+    <div class="grid2 seed-grid">
+      <div>
+        <h3>Existing report (valid or invalid)</h3>
+        <div class="upload-box" id="reportUploadBox">
+          <div class="field">
+            <label for="reportFile">Upload .md / .txt file</label>
+            <input type="file" id="reportFile" accept=".md,.txt,text/plain,text/markdown">
+          </div>
+          <div class="field">
+            <label>Or paste report text</label>
+            <textarea id="reportPaste" placeholder="Paste the full Legalization Proof / Preliminary Legalization Proof markdown here"></textarea>
+          </div>
+          <div class="upload-actions">
+            <button type="button" class="outline" id="parseReportBtn">Parse report</button>
+            <button type="button" class="ghost" id="clearReportBtn">Clear</button>
+          </div>
+          <div class="status-line" id="reportStatus" role="status"></div>
+        </div>
+      </div>
+      <div>
+        <h3>Internal company/shareholder JSON</h3>
+        <div class="upload-box" id="jsonUploadBox">
+          <div class="field">
+            <label for="jsonFile">Upload .json file</label>
+            <input type="file" id="jsonFile" accept=".json,application/json">
+          </div>
+          <div class="field">
+            <label>Or paste JSON text</label>
+            <textarea id="jsonPaste" placeholder="Paste the internal system JSON here"></textarea>
+          </div>
+          <div class="upload-actions">
+            <button type="button" class="outline" id="parseJsonBtn">Parse JSON</button>
+          </div>
+          <div class="status-line" id="jsonStatus" role="status"></div>
+        </div>
+      </div>
+    </div>
+    <p class="note">Nothing here is trusted blindly. Parsed fields are marked and stay editable; records for the same person in one import (same name, no conflicting tax ID) are combined into one entry with all their roles.</p>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <!-- COMPANY PROFILE -->
+      <div class="panel">
+        <h2><span class="n">2</span>Company Profile</h2>
+        <div class="grid2">
+          <div class="field"><label for="cp_name">Company Name</label><input type="text" id="cp_name"></div>
+          <div class="field"><label for="cp_tradeName">Trade Name <span class="opt">(optional)</span></label><input type="text" id="cp_tradeName"></div>
+          <div class="field"><label for="cp_legalForm">Legal Form</label><input type="text" id="cp_legalForm"></div>
+          <div class="field"><label for="cp_regNo">Registration Number</label><input type="text" id="cp_regNo"></div>
+          <div class="field"><label for="cp_taxNumber">Tax Number</label><input type="text" id="cp_taxNumber"></div>
+          <div class="field"><label for="cp_incorporated">Date of Incorporation</label><input type="date" id="cp_incorporated"></div>
+          <div class="field"><label for="cp_address">Registered Address</label><input type="text" id="cp_address"></div>
+          <div class="field"><label for="cp_country">Country</label><input type="text" id="cp_country"></div>
+          <div class="field"><label for="cp_status">Company Status</label>
+            <select id="cp_status"><option>Active</option><option>In liquidation</option><option>Dissolved</option><option>Other</option></select>
+          </div>
+          <div class="field"><label for="cp_mcc">MCC <span class="opt">(optional)</span></label><input type="text" id="cp_mcc" placeholder="Code and description"></div>
+        </div>
+      </div>
+
+      <!-- SHAREHOLDING & ROLES -->
+      <div class="panel">
+        <h2><span class="n">3</span>Shareholding Structure &amp; Roles</h2>
+        <p class="note">Add one entry per person or entity. A single person can hold several roles at once (e.g. Shareholder + Legal Representative + UBO). Parse JSON fills in one entry per stakeholder below; every field stays editable.</p>
+
+        <div class="entry-cards-head hidden" id="entryCardsHead">
+          <h3 id="entryCount">0 entries</h3>
+          <div class="btnrow">
+            <button type="button" class="small" id="expandAllBtn">Expand all</button>
+            <button type="button" class="small" id="collapseAllBtn">Collapse all</button>
+          </div>
+        </div>
+        <div id="entryCards"></div>
+
+        <div class="entity-form" id="entityForm">
+          <h3 id="entityFormTitle">Add an entry</h3>
+          <div class="grid3">
+            <div class="field"><label for="entName">Name</label><input type="text" id="entName" placeholder="Full or legal entity name"></div>
+            <div class="field"><label for="entType">Type</label>
+              <select id="entType"><option value="person">Natural person</option><option value="company">Legal entity</option></select>
+            </div>
+            <div class="field"><label for="entOwns">Owns a stake in <span class="opt">(optional)</span></label>
+              <select id="entOwns"></select>
+            </div>
+          </div>
+          <div class="grid3" id="entCompanyFields">
+            <div class="field"><label for="entJuris">Jurisdiction</label><input type="text" id="entJuris"></div>
+            <div class="field"><label for="entRegNo">Registration Number</label><input type="text" id="entRegNo"></div>
+            <div></div>
+          </div>
+          <div class="grid3 hidden" id="entPersonFields">
+            <div class="field"><label for="entDob">Date of Birth <span class="opt">(optional)</span></label><input type="date" id="entDob"></div>
+            <div class="field"><label for="entTaxId">Tax ID <span class="opt">(optional)</span></label><input type="text" id="entTaxId"></div>
+            <div></div>
+          </div>
+
+          <div class="sep"></div>
+          <p class="group-label">Roles <span class="opt">(tick all that apply)</span></p>
+          <div class="grid3">
+            <label class="checkline"><input type="checkbox" id="roleShareholder"> Shareholder</label>
+            <label class="checkline"><input type="checkbox" id="roleUbo"> Ultimate Beneficial Owner</label>
+            <label class="checkline"><input type="checkbox" id="roleLegalRep"> Legal Representative</label>
+            <label class="checkline"><input type="checkbox" id="roleAuthAdmin"> Authorized Administrator</label>
+            <label class="checkline"><input type="checkbox" id="roleSignatory"> Signatory</label>
+            <label class="checkline"><input type="checkbox" id="roleBod"> Board of Directors</label>
+          </div>
+          <div class="checkline"><input type="checkbox" id="roleOther"> <label for="roleOther">Other:</label>
+            <input type="text" id="roleOtherText" aria-label="Other role" placeholder="Specify role">
+          </div>
+
+          <div class="field" id="pctFieldWrap" style="margin-top:.6rem;">
+            <label for="entPct">Shareholding % <span class="opt">(optional)</span></label>
+            <input type="number" id="entPct" min="0" max="100" step="0.01" placeholder="0-100">
+          </div>
+
+          <div class="hidden" id="uboFieldsWrap" style="margin-top:.6rem;">
+            <p class="group-label">UBO basis</p>
+            <div class="grid2">
+              <label class="checkline"><input type="radio" name="uboBasis" id="uboBasisOwnership" value="ownership"> Ownership</label>
+              <label class="checkline"><input type="radio" name="uboBasis" id="uboBasisControl" value="control"> Control (no shareholding)</label>
+            </div>
+            <div class="grid2">
+              <div class="field hidden" id="uboPctWrap"><label for="entUboPct">UBO Ownership %</label><input type="number" id="entUboPct" min="0" max="100" step="0.01"></div>
+              <div class="field hidden" id="uboControlWrap"><label for="entControlType">Nature of control</label>
+                <select id="entControlType">
+                  <option>Voting rights</option>
+                  <option>Right to appoint/remove majority of directors</option>
+                  <option>Significant influence or control</option>
+                  <option>Senior Managing Official (no natural person UBO identified)</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <label class="checkline" style="margin-top:.6rem;"><input type="checkbox" id="entVerified"> Verified against source documents</label>
+
+          <div style="margin-top:.6rem;">
+            <p class="group-label">Source of information <span class="opt">(tick all that apply)</span></p>
+            <div class="grid2">
+              <label class="checkline"><input type="checkbox" id="entSrcUbo"> UBO registry</label>
+              <label class="checkline"><input type="checkbox" id="entSrcTrade"> Trade registry</label>
+              <label class="checkline"><input type="checkbox" id="entSrcCredit"> Credit bureau</label>
+              <label class="checkline"><input type="checkbox" id="entSrcDeclaration"> Customer declaration</label>
+            </div>
+          </div>
+
+          <div class="btnrow">
+            <button type="button" class="primary" id="entitySaveBtn">Add entry</button>
+            <button type="button" class="ghost hidden" id="entityCancelBtn">Cancel</button>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+          <section id="diagramSection" aria-labelledby="diagramTitle">
+          <div class="diagram-head">
+            <div>
+              <h3 id="diagramTitle">Ownership diagram</h3>
+              <p class="diagram-meta" id="diagramMeta"></p>
+            </div>
+            <button type="button" class="primary" id="generateDiagramBtn">Generate diagram</button>
+          </div>
+          <div class="diagram-toolbar">
+            <div class="seg" id="orientToggle" role="group" aria-label="Layout">
+              <button type="button" class="active" data-orient="auto" aria-pressed="true">Auto</button>
+              <button type="button" data-orient="v" aria-pressed="false">Top-down</button>
+              <button type="button" data-orient="h" aria-pressed="false">Left-right</button>
+            </div>
+            <div class="zoom" role="group" aria-label="Zoom">
+              <button type="button" class="small" id="zoomOutBtn" aria-label="Zoom out">&minus;</button>
+              <span id="zoomLabel" class="zoom-label">100%</span>
+              <button type="button" class="small" id="zoomInBtn" aria-label="Zoom in">+</button>
+              <button type="button" class="small" id="zoomFitBtn">Fit</button>
+              <button type="button" class="small" id="fullscreenBtn">Full screen</button>
+            </div>
+            <div class="btnrow">
+              <button type="button" class="outline small" id="exportSvgBtn">Download SVG</button>
+              <button type="button" class="outline small" id="exportPngBtn">Download PNG</button>
+            </div>
+          </div>
+          <div id="canvas"></div>
+          <div id="diagramIssues" class="validation-banner hidden" role="status"></div>
+          </section>
+          <p class="note">Only entries with an ownership link appear on the diagram. Click a box to jump to that entry above.</p>
+      </div>
+    </div>
+
+    <div>
+      <!-- CASE-SPECIFIC PANEL -->
+      <div class="panel" id="case2Panel">
+        <h2><span class="n">4</span>Case 2: Red Flags &amp; Representation Review</h2>
+        <h3>Red Flags — Investigator Resolution</h3>
+        <div id="redFlagList"></div>
+        <button type="button" class="outline small" id="addRedFlagBtn">Add red flag</button>
+
+        <div class="sep"></div>
+        <h3>Representation Review Gate (Acts 4.1-4.4)</h3>
+        <div class="field"><label>Is the original representation analysis correct for ALL acts?</label>
+          <select data-k="c2_gate_allacts"><option value="">Select…</option><option>YES</option><option>NO</option></select>
+        </div>
+        <div id="c2ActsWrap" class="hidden"></div>
+
+        <div class="sep"></div>
+        <h3>Expiration</h3>
+        <div class="field"><label>Does the expiration date stated in the original report remain correct?</label>
+          <select data-k="c2_expiration_ok"><option value="">Select…</option><option>YES</option><option>NO</option><option>Not Applicable</option></select>
+        </div>
+        <div class="field hidden" id="c2ExpDateWrap"><label>Confirmed expiration date</label><input type="date" data-k="c2_expiration_date"></div>
+
+        <div class="sep"></div>
+        <h3>Final Outcome</h3>
+        <div class="grid2">
+          <div class="field"><label>Final overall result</label>
+            <select data-k="c2_final_result"><option value="">Select…</option><option>VALID SIGN OFF</option><option>INCONCLUSIVE</option></select>
+          </div>
+          <div class="field"><label>Outstanding material risks</label><input type="text" data-k="c2_outstanding_risks" placeholder="None"></div>
+        </div>
+        <div class="outcome-hint" id="c2OutcomeHint" role="status" hidden></div>
+      </div>
+
+      <div class="panel" id="case3Panel">
+        <h2><span class="n">4</span>Case 3: Legalization Report From Scratch</h2>
+        <div class="field"><label>Have all matrix-required documents been collected, reviewed and analyzed?</label>
+          <select data-k="c3_matrix"><option value="">Select…</option><option>Yes</option><option>No</option></select>
+        </div>
+        <div id="c3ActsWrap"></div>
+        <div class="sep"></div>
+        <h3>Expiration</h3>
+        <div class="field"><label>Does a "Report Valid Until" date apply?</label>
+          <select data-k="c3_expiration_mode"><option value="">Select…</option><option>Yes</option><option>No</option><option>Not Applicable</option></select>
+        </div>
+        <div class="field hidden" id="c3ExpDateWrap"><label>Report Valid Until</label><input type="date" data-k="c3_expiration_date"></div>
+        <div class="sep"></div>
+        <h3>Red Flags Gate</h3>
+        <div class="field"><label>Any red flags, conflicts, ambiguities or unresolved issues?</label>
+          <select data-k="c3_redflags_gate"><option value="">Select…</option><option>No</option><option>Yes</option></select>
+        </div>
+        <p class="note dashed hidden" id="c3RedFlagWarning">If there are red flags, switch to <strong>Case 2</strong> instead. This case is for a clean, from-scratch legalization report only.</p>
+        <div class="sep"></div>
+        <h3>Compliance Checklist</h3>
+        <div id="c3Checklist"></div>
+        <div class="sep"></div>
+        <div class="field"><label>Final confirmation: is representation fully clear, complete and valid for acts 4.1-4.4?</label>
+          <select data-k="c3_final_confirm"><option value="">Select…</option><option>Yes</option><option>No</option></select>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2><span class="n">5</span>Investigator &amp; Export</h2>
+        <div class="grid2">
+          <div class="field"><label>Investigator Full Name</label>
+            <input type="text" data-k="inv_name" placeholder="Full name" autocomplete="name">
+          </div>
+          <div class="field"><label>Date</label><input type="date" data-k="inv_date"></div>
+        </div>
+        <div id="validationBanner" class="validation-banner hidden" role="alert"></div>
+        <div class="btnrow">
+          <button type="button" class="primary" id="buildExportBtn">Build export package</button>
+          <button type="button" class="outline" id="copyExportBtn">Copy .md</button>
+          <button type="button" class="outline" id="downloadExportBtn">Download .md</button>
+          <button type="button" class="outline" id="printExportBtn">Print / PDF</button>
+          <span class="save-indicator" id="saveIndicator" role="status" aria-live="polite">Saved</span>
+        </div>
+        <div class="sep"></div>
+        <textarea id="exportPreview" class="export-preview" readonly aria-label="Export preview">Click "Build export package" to preview the markdown.</textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var genId = function(){ return 'e' + Math.random().toString(36).slice(2,9); };
+
+  var scenario = '1';
+  var entities = [];
+  var editingEntityId = null;
+  var redFlags = [];
+  var actReference = {};
+  var rawReportText = '';
+  var rawJsonText = '';
+
+
+  // ---------- scenario toggle ----------
+  document.querySelectorAll('#scenarioToggle button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      scenario = btn.getAttribute('data-s');
+      document.querySelectorAll('#scenarioToggle button').forEach(function(b){
+        b.classList.toggle('active', b===btn);
+        b.setAttribute('aria-pressed', b===btn ? 'true' : 'false');
+      });
+      updateScenarioPanels();
+    });
+  });
+  function updateScenarioPanels(){
+    $('case2Panel').classList.toggle('hidden', scenario!=='2');
+    $('case3Panel').classList.toggle('hidden', scenario!=='3');
+  }
+  updateScenarioPanels();
+
+  $('acceptSuggestion').addEventListener('click', function(){
+    var s = $('suggestionBanner').getAttribute('data-suggest');
+    if(s){
+      document.querySelector('#scenarioToggle button[data-s="'+s+'"]').click();
+    }
+    $('suggestionBanner').classList.add('hidden');
+  });
+  function showScenarioSuggestion(s, text){
+    $('suggestionBanner').setAttribute('data-suggest', s);
+    $('suggestionText').textContent = text;
+    $('suggestionBanner').classList.remove('hidden');
+  }
+
+  // ---------- generic data-k helpers (case2/case3/investigator fields) ----------
+  function dk(k){ return document.querySelector('[data-k="'+k+'"]'); }
+  function getK(k){ var el = dk(k); return el ? (el.value||'').trim() : ''; }
+  function setK(k, v){ var el = dk(k); if(el) el.value = v||''; }
+
+  dk('c2_expiration_ok').addEventListener('change', function(){
+    $('c2ExpDateWrap').classList.toggle('hidden', this.value!=='YES');
+  });
+  dk('c3_expiration_mode').addEventListener('change', function(){
+    $('c3ExpDateWrap').classList.toggle('hidden', this.value!=='Yes');
+  });
+  dk('c3_redflags_gate').addEventListener('change', function(){
+    $('c3RedFlagWarning').classList.toggle('hidden', this.value!=='Yes');
+  });
+
+  // ---------- Case 2 acts (light fields) ----------
+  var ACT_NAMES = {'41':'4.1 General Representation','42':'4.2 Opening of Banking/Payment Accounts','43':'4.3 Movement of Accounts & Payments','44':'4.4 Borrowing, Collateral & Guarantees'};
+  function buildC2Acts(){
+    var html = '';
+    Object.keys(ACT_NAMES).forEach(function(act){
+      html += '<div class="act-block"><h4>'+ACT_NAMES[act]+'</h4>' +
+        '<div class="field"><label>Authorized person(s)</label><input type="text" data-k="c2_'+act+'_auth"></div>' +
+        '<div class="grid2">' +
+        '<div class="field"><label>Representation mode</label><select data-k="c2_'+act+'_mode"><option value="">Select…</option><option>Sole</option><option>Joint</option><option>Collective</option><option>Alternate</option><option>Other</option></select></div>' +
+        '<div class="field"><label>Limits / thresholds</label><input type="text" data-k="c2_'+act+'_limits" placeholder="None"></div>' +
+        '</div>' +
+        '<div class="field"><label>Notes / evidence</label><textarea data-k="c2_'+act+'_notes"></textarea></div>' +
+        '</div>';
+    });
+    $('c2ActsWrap').innerHTML = html;
+  }
+  buildC2Acts();
+  dk('c2_gate_allacts').addEventListener('change', function(){
+    $('c2ActsWrap').classList.toggle('hidden', this.value!=='NO');
+  });
+
+  // ---------- Case 3 acts (full fields) ----------
+  function buildC3Acts(){
+    var html = '';
+    Object.keys(ACT_NAMES).forEach(function(act){
+      var fallbackRow = act==='41' ? '' :
+        '<label class="checkline"><input type="checkbox" data-k="c3_'+act+'_fallback" onchange="window.__c3Fallback(\''+act+'\',this.checked)"> Fallback to 4.1 (auto-copy those values)</label>';
+      html += '<div class="act-block"><h4>'+ACT_NAMES[act]+'</h4>' + fallbackRow +
+        '<div class="field"><label>Clause Extract / Statutory Rule (verbatim, any language)</label><textarea data-k="c3_'+act+'_clause"></textarea></div>' +
+        '<div class="field"><label>Description of the rule</label><textarea data-k="c3_'+act+'_desc"></textarea></div>' +
+        '<div class="grid2">' +
+        '<div class="field"><label>Representation Mode</label><select data-k="c3_'+act+'_mode"><option value="">Select…</option><option>Sole</option><option>Joint-n</option><option>Joint-with-Role</option><option>Collective</option><option>Alternate</option><option>Deputy</option></select></div>' +
+        '<div class="field"><label>Mode Parameters</label><input type="text" data-k="c3_'+act+'_params"></div>' +
+        '</div>' +
+        '<div class="field"><label>Authorized Signers (full names)</label><input type="text" data-k="c3_'+act+'_signers"></div>' +
+        '<div class="grid2">' +
+        '<div class="field"><label>Monetary Limits / Thresholds</label><input type="text" data-k="c3_'+act+'_limits" placeholder="None"></div>' +
+        '<div class="field"><label>Other Restrictions / Conditions</label><input type="text" data-k="c3_'+act+'_restrictions" placeholder="None"></div>' +
+        '</div>' +
+        '</div>';
+    });
+    $('c3ActsWrap').innerHTML = html;
+  }
+  buildC3Acts();
+  window.__c3Fallback = function(act, checked){
+    ['clause','desc','mode','params','signers','limits','restrictions'].forEach(function(f){
+      var target = dk('c3_'+act+'_'+f);
+      if(!target) return;
+      if(checked){
+        target.value = f==='clause' ? ('Fallback to 4.1. ' + getK('c3_41_clause')) : getK('c3_41_'+f);
+        target.disabled = true;
+      } else {
+        target.disabled = false;
+      }
+    });
+  };
+
+  // ---------- Case 3 checklist ----------
+  var C3_CHECKLIST = [
+    'Legal form consistent with the reviewed documents',
+    'Authority to represent and bind the company is clearly evidenced',
+    'Representation is clear and unambiguous for all acts 4.1–4.4',
+    'No unresolved conflicts or ambiguities remain',
+    'Expiration has been explicitly reviewed and confirmed'
+  ];
+  (function(){
+    var html = '';
+    C3_CHECKLIST.forEach(function(item, i){
+      html += '<div class="field"><label>'+item+'</label>' +
+        '<select data-k="c3_check_'+i+'"><option value="">Select…</option><option>Yes</option><option>No</option><option>N/A</option></select></div>';
+    });
+    $('c3Checklist').innerHTML = html;
+  })();
+
+  // ---------- Red flags (case 2) ----------
+  function addRedFlagBlock(prefill){
+    var id = genId();
+    redFlags.push(Object.assign({id:id, code:'', desc:'', decision:'', notes:''}, prefill||{}));
+    renderRedFlags();
+  }
+  function renderRedFlags(){
+    var html = '';
+    redFlags.forEach(function(rf, i){
+      html += '<div class="rf-block" data-id="'+rf.id+'">' +
+        '<div class="rf-head"><strong>Red Flag #'+(i+1)+' <span class="rfs-state rf-chip"></span></strong><button type="button" class="small danger" data-del-rf="'+rf.id+'">Remove</button></div>' +
+        '<div class="field"><label>ID / Code</label><input type="text" class="rf-code" value="'+escapeAttr(rf.code)+'"></div>' +
+        '<div class="field"><label>Description</label><textarea class="rf-desc">'+escapeHtml(rf.desc)+'</textarea></div>' +
+        '<div class="field"><p class="group-label" id="dl_'+rf.id+'">Investigator Decision</p>' + decisionSeg(rf) + '</div>' +
+        '<div class="field rf-notes-field"><label for="rn_'+rf.id+'">Resolution Notes / Evidence <span class="opt rf-notes-req"></span></label>' +
+        '<textarea class="rf-notes" id="rn_'+rf.id+'" rows="2">'+escapeHtml(rf.notes)+'</textarea>' +
+        '<p class="rf-notes-hint"></p></div>' +
+        '</div>';
+    });
+    $('redFlagList').innerHTML = html || '<p class="table-empty">No red flags added yet.</p>';
+    if(typeof renderRfSummary==='function' && $('rfSummary')) renderRfSummary();
+    $('redFlagList').querySelectorAll('[data-del-rf]').forEach(function(b){
+      b.addEventListener('click', function(){
+        redFlags = redFlags.filter(function(r){ return r.id !== b.getAttribute('data-del-rf'); });
+        renderRedFlags();
+      });
+    });
+    $('redFlagList').querySelectorAll('.rf-block').forEach(function(block){
+      var id = block.getAttribute('data-id');
+      var rf = redFlags.find(function(r){ return r.id===id; });
+      block.querySelector('.rf-code').addEventListener('input', function(){ rf.code = this.value; renderRfSummary(); });
+      block.querySelector('.rf-desc').addEventListener('input', function(){ rf.desc = this.value; renderRfSummary(); });
+      block.querySelectorAll('.dec').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          // clicking the chosen decision again returns the flag to Open
+          rf.decision = rf.decision===btn.getAttribute('data-dec') ? '' : btn.getAttribute('data-dec');
+          syncDecision(block, rf); renderRfSummary(); updateOutcomeGuard(); scheduleSave();
+        });
+        btn.addEventListener('keydown', function(ev){
+          if(ev.key!=='ArrowRight' && ev.key!=='ArrowLeft') return;
+          var all = [].slice.call(block.querySelectorAll('.dec'));
+          var n = all[(all.indexOf(btn) + (ev.key==='ArrowRight'?1:all.length-1)) % all.length];
+          n.focus(); ev.preventDefault();
+        });
+      });
+      block.querySelector('.rf-notes').addEventListener('input', function(){ rf.notes = this.value; syncDecision(block, rf); updateOutcomeGuard(); });
+      syncDecision(block, rf);
+    });
+    updateOutcomeGuard();
+  }
+
+  var DECISIONS = [
+    ['Resolved','ok','Resolved','<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'],
+    ['False Red Flag','false','False flag','<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4.2 11.8l7.6-7.6" stroke="currentColor" stroke-width="1.8"/></svg>'],
+    ['Cannot Be Resolved','blocked','Cannot resolve','<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M4.5 4.5l7 7m0-7l-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>']
+  ];
+  function decisionSeg(rf){
+    return '<div class="decision-seg" role="group" aria-labelledby="dl_'+rf.id+'">' + DECISIONS.map(function(d){
+      return '<button type="button" class="dec dec-'+d[1]+'" data-dec="'+d[0]+'" aria-pressed="false">'+d[3]+'<span>'+d[2]+'</span></button>';
+    }).join('') + '</div>';
+  }
+  // reflect one flag's decision: pressed button, header chip, whether a note is required
+  function syncDecision(block, rf){
+    block.querySelectorAll('.dec').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-dec')===rf.decision ? 'true' : 'false'); });
+    var st = RFS_STATE[rf.decision||''] || RFS_STATE[''];
+    var chip = block.querySelector('.rf-chip'); chip.className = 'rfs-state rf-chip ' + st[0]; chip.textContent = st[1];
+    var needs = !!rf.decision;          // every decision needs a written justification
+    var empty = !(rf.notes||'').trim();
+    var field = block.querySelector('.rf-notes-field');
+    field.classList.toggle('needs-note', needs && empty);
+    block.querySelector('.rf-notes-req').textContent = needs ? '(required)' : '(optional)';
+    block.querySelector('.rf-notes').setAttribute('aria-required', needs ? 'true' : 'false');
+    var hint = block.querySelector('.rf-notes-hint');
+    hint.textContent = needs && empty
+      ? ({'Resolved':'Cite the document and page that resolves it.',
+          'False Red Flag':'Explain why this is not a real issue.',
+          'Cannot Be Resolved':'Explain what blocks resolution and what is still needed.'})[rf.decision]
+      : '';
+  }
+
+  // "VALID SIGN OFF" is only available when no flag is open or unresolvable
+  function updateOutcomeGuard(){
+    var sel = dk('c2_final_result'); if(!sel) return;
+    var open = redFlags.filter(function(r){ return !r.decision; });
+    var blocked = redFlags.filter(function(r){ return r.decision==='Cannot Be Resolved'; });
+    var missingNotes = redFlags.filter(function(r){ return r.decision && !(r.notes||'').trim(); });
+    var validOpt = [].slice.call(sel.options).find(function(o){ return o.value==='VALID SIGN OFF'; });
+    var canValid = !open.length && !blocked.length && !missingNotes.length;
+    if(validOpt) validOpt.disabled = !canValid;
+    if(!canValid && sel.value==='VALID SIGN OFF') sel.value = '';
+    var codes = function(list){ return list.map(function(r, i){ return r.code || ('#' + (redFlags.indexOf(r)+1)); }).join(', '); };
+    var hint = $('c2OutcomeHint'), html = '', cls = '';
+    if(redFlags.length && !canValid){
+      var li = function(label, list){ return list.length ? '<li><strong>'+list.length+' '+label+':</strong> '+escapeHtml(codes(list))+'</li>' : ''; };
+      html = '<strong>VALID SIGN OFF is unavailable</strong><ul>' + li('open', open) + li('cannot be resolved', blocked) + li('missing a required note', missingNotes) + '</ul>'
+        + (blocked.length && !open.length ? '<span>Suggested result: <strong>INCONCLUSIVE</strong>.</span>' : '');
+      cls = blocked.length && !open.length ? 'blocked' : 'open';
+    } else if(redFlags.length){
+      html = 'All red flags reviewed. Suggested result: <strong>VALID SIGN OFF</strong>.'; cls = 'ok';
+    }
+    hint.innerHTML = html; hint.className = 'outcome-hint ' + cls; hint.hidden = !html;
+  }
+  $('addRedFlagBtn').addEventListener('click', function(){ addRedFlagBlock(); });
+  renderRedFlags();
+
+  // ---------- entity form ----------
+  function refreshOwnsDropdown(excludeId){
+    var sel = $('entOwns');
+    var current = sel.value;
+    sel.innerHTML = '<option value="none">No ownership link</option><option value="root">'+escapeHtml($('cp_name').value.trim() || 'Subject company')+' (subject company)</option>';
+    entities.forEach(function(e){
+      if(e.entityType==='company' && e.id!==excludeId){
+        var opt = document.createElement('option'); opt.value=e.id; opt.textContent=e.name || '(unnamed)';
+        sel.appendChild(opt);
+      }
+    });
+    if(current) sel.value = current;
+  }
+
+  $('entType').addEventListener('change', function(){
+    var isCompany = this.value === 'company';
+    $('entCompanyFields').classList.toggle('hidden', !isCompany);
+    $('entPersonFields').classList.toggle('hidden', isCompany);
+  });
+
+  function syncRoleFieldVisibility(){
+    var ubo = $('roleUbo').checked;
+    $('uboFieldsWrap').classList.toggle('hidden', !ubo);
+    if(ubo){
+      var basis = document.querySelector('input[name="uboBasis"]:checked');
+      var basisVal = basis ? basis.value : '';
+      $('uboPctWrap').classList.toggle('hidden', basisVal!=='ownership');
+      $('uboControlWrap').classList.toggle('hidden', basisVal!=='control');
+    }
+  }
+  ['roleShareholder','roleUbo'].forEach(function(id){ $(id).addEventListener('change', syncRoleFieldVisibility); });
+  document.querySelectorAll('input[name="uboBasis"]').forEach(function(r){ r.addEventListener('change', syncRoleFieldVisibility); });
+  $('roleOther').addEventListener('change', function(){ $('roleOtherText').disabled = !this.checked; });
+
+  function resetEntityForm(){
+    editingEntityId = null;
+    $('entityFormTitle').textContent = 'Add an entry';
+    $('entName').value=''; $('entType').value='person';
+    $('entCompanyFields').classList.add('hidden'); $('entPersonFields').classList.remove('hidden');
+    $('entJuris').value=''; $('entRegNo').value=''; $('entDob').value=''; $('entTaxId').value='';
+    refreshOwnsDropdown(null); $('entOwns').value='none';
+    $('entPct').value='';
+    ['roleShareholder','roleUbo','roleLegalRep','roleAuthAdmin','roleSignatory','roleBod','roleOther'].forEach(function(id){ $(id).checked=false; });
+    $('roleOtherText').value=''; $('roleOtherText').disabled = true;
+    $('uboBasisOwnership').checked=false; $('uboBasisControl').checked=false;
+    $('entUboPct').value=''; $('entControlType').selectedIndex=0;
+    $('entVerified').checked=false;
+    $('entSrcUbo').checked=false; $('entSrcTrade').checked=false; $('entSrcCredit').checked=false; $('entSrcDeclaration').checked=false;
+    syncRoleFieldVisibility();
+    $('entitySaveBtn').textContent='Add entry';
+    $('entityCancelBtn').classList.add('hidden');
+  }
+  $('entityCancelBtn').addEventListener('click', resetEntityForm);
+
+  function readEntityForm(){
+    var basisEl = document.querySelector('input[name="uboBasis"]:checked');
+    return {
+      id: editingEntityId || genId(),
+      name: $('entName').value.trim(),
+      entityType: $('entType').value,
+      ownsStakeIn: $('entOwns').value,
+      pct: $('entPct').value !== '' ? (parseFloat($('entPct').value)||0) : null,
+      roles: {
+        shareholder: $('roleShareholder').checked,
+        ubo: $('roleUbo').checked,
+        legalRep: $('roleLegalRep').checked,
+        authAdmin: $('roleAuthAdmin').checked,
+        signatory: $('roleSignatory').checked,
+        bod: $('roleBod').checked,
+        other: $('roleOther').checked,
+        otherText: $('roleOtherText').value.trim()
+      },
+      uboBasis: $('roleUbo').checked ? (basisEl ? basisEl.value : '') : null,
+      uboPct: ($('roleUbo').checked && basisEl && basisEl.value==='ownership') ? (parseFloat($('entUboPct').value)||0) : null,
+      controlType: ($('roleUbo').checked && basisEl && basisEl.value==='control') ? $('entControlType').value : '',
+      jurisdiction: $('entJuris').value.trim(),
+      regNo: $('entRegNo').value.trim(),
+      dob: $('entDob').value,
+      taxId: $('entTaxId').value.trim(),
+      verified: $('entVerified').checked,
+      sources: [
+        $('entSrcUbo').checked ? 'UBO registry' : null,
+        $('entSrcTrade').checked ? 'Trade registry' : null,
+        $('entSrcCredit').checked ? 'Credit bureau' : null,
+        $('entSrcDeclaration').checked ? 'Customer declaration' : null
+      ].filter(Boolean),
+      sourceTag: 'manual'
+    };
+  }
+
+  $('entitySaveBtn').addEventListener('click', function(){
+    var rec = readEntityForm();
+    if(!rec.name){ $('entName').focus(); return; }
+    if(!pctOk($('entPct')) || !pctOk($('entUboPct'))){ ($('entPct').classList.contains('pct-bad') ? $('entPct') : $('entUboPct')).focus(); return; }
+    if(editingEntityId){
+      entities = entities.map(function(e){ return e.id===editingEntityId ? rec : e; });
+    } else {
+      entities.push(rec);
+    }
+    resetEntityForm();
+    renderAll();
+  });
+
+  function deleteEntity(id){
+    entities = entities.filter(function(e){ return e.id!==id; });
+    entities.forEach(function(e){ if(e.ownsStakeIn===id) e.ownsStakeIn='none'; });
+    if(editingEntityId===id) resetEntityForm();
+    renderAll();
+  }
+
+  function badgeFor(e){
+    if(e.roles.shareholder && e.roles.ubo && e.uboBasis==='ownership') return {text:'Shareholder (UBO)', cls:'ubo'};
+    if(e.roles.shareholder) return {text:'Shareholder', cls:'share'};
+    if(e.roles.ubo && e.uboBasis==='control') return {text:'UBO — Control', cls:'ubo'};
+    if(e.roles.ubo) return {text:'UBO', cls:'ubo'};
+    return null;
+  }
+  function tagsFor(e){
+    var tags = [];
+    if(e.roles.legalRep) tags.push('Legal Representative');
+    if(e.roles.authAdmin) tags.push('Authorized Administrator');
+    if(e.roles.signatory) tags.push('Signatory');
+    if(e.roles.bod) tags.push('Board of Directors');
+    if(e.roles.other) tags.push(e.roles.otherText || 'Other');
+    return tags;
+  }
+
+  function ownerName(id){
+    if(id==='root' || !id) return ($('cp_name').value.trim() || 'Subject company');
+    var e = entities.find(function(x){ return x.id===id; });
+    return e ? e.name : '—';
+  }
+
+  // ---------- entry cards: one filled-in form per entry ----------
+  // Every entry (imported or added by hand) gets the same fields as the
+  // "Add an entry" form. Edits write straight into the entry and redraw the
+  // diagram; the cards themselves are only rebuilt when entries are added or
+  // removed, so typing never loses focus.
+  var CARD_ROLES = [['shareholder','Shareholder'],['ubo','Ultimate Beneficial Owner'],['legalRep','Legal Representative'],
+    ['authAdmin','Authorized Administrator'],['signatory','Signatory'],['bod','Board of Directors']];
+  var CARD_SOURCES = ['UBO registry','Trade registry','Credit bureau','Customer declaration'];
+  var CONTROL_TYPES = ['Voting rights','Right to appoint/remove majority of directors','Significant influence or control',
+    'Senior Managing Official (no natural person UBO identified)','Other'];
+  var cardsOpenDefault = null;
+
+  function ownsOptions(e){
+    var cur = e.ownsStakeIn || 'none';
+    var opt = function(v, label){ return '<option value="'+v+'"'+(v===cur?' selected':'')+'>'+label+'</option>'; };
+    var h = opt('none', 'No ownership link')
+      + opt('root', escapeHtml($('cp_name').value.trim() || 'Subject company')+' (subject company)');
+    entities.forEach(function(o){
+      if(o.entityType==='company' && o.id!==e.id) h += opt(o.id, escapeHtml(o.name||'(unnamed)'));
+    });
+    return h;
+  }
+  function cardSummary(e){
+    var bits = [];
+    var badge = badgeFor(e); if(badge) bits.push(badge.text);
+    tagsFor(e).forEach(function(t){ bits.push(t); });
+    var s = (e.entityType==='company'?'Legal entity':'Natural person') + (bits.length ? ' · ' + bits.join(', ') : '');
+    return s;
+  }
+  function cardPct(e){ return e.pct!=null ? fmtPct(e.pct) : ((e.ownsStakeIn && e.ownsStakeIn!=='none') ? 'n/a' : ''); }
+
+  function cardHtml(e, i, open){
+    var id = e.id, isCo = e.entityType==='company';
+    var f = function(k){ return 'data-f="'+k+'"'; };
+    var chk = function(on){ return on ? ' checked' : ''; };
+    var h = '<details class="entry-card" data-id="'+id+'"'+(open?' open':'')+'>'
+      + '<summary><span class="ec-num">'+(i+1)+'</span>'
+      + '<span class="ec-title"><span class="ec-name">'+escapeHtml(e.name||'(unnamed)')+'</span>'
+      + '<span class="ec-sub">'+escapeHtml(cardSummary(e))+'</span></span>'
+      + '<span class="ec-pct">'+cardPct(e)+'</span>'
+      + '<button type="button" class="small danger ec-remove" data-remove="'+id+'" aria-label="Remove '+escapeAttr(e.name||'entry')+'">Remove</button>'
+      + '</summary><div class="ec-body">';
+    h += '<div class="grid3">'
+      + '<div class="field"><label>Name</label><input type="text" '+f('name')+' value="'+escapeAttr(e.name)+'"></div>'
+      + '<div class="field"><label>Type</label><select '+f('entityType')+'><option value="person"'+(isCo?'':' selected')+'>Natural person</option><option value="company"'+(isCo?' selected':'')+'>Legal entity</option></select></div>'
+      + '<div class="field"><label>Owns a stake in <span class="opt">(optional)</span></label><select '+f('ownsStakeIn')+'>'+ownsOptions(e)+'</select></div>'
+      + '</div>';
+    h += '<div class="grid3 ec-co'+(isCo?'':' hidden')+'">'
+      + '<div class="field"><label>Jurisdiction</label><input type="text" '+f('jurisdiction')+' value="'+escapeAttr(e.jurisdiction)+'"></div>'
+      + '<div class="field"><label>Registration Number</label><input type="text" '+f('regNo')+' value="'+escapeAttr(e.regNo)+'"></div><div></div></div>';
+    h += '<div class="grid3 ec-pe'+(isCo?' hidden':'')+'">'
+      + '<div class="field"><label>Date of Birth <span class="opt">(optional)</span></label><input type="date" '+f('dob')+' value="'+escapeAttr(e.dob)+'"></div>'
+      + '<div class="field"><label>Tax ID <span class="opt">(optional)</span></label><input type="text" '+f('taxId')+' value="'+escapeAttr(e.taxId)+'"></div><div></div></div>';
+    h += '<p class="group-label">Roles <span class="opt">(tick all that apply)</span></p><div class="grid3">';
+    CARD_ROLES.forEach(function(r){ h += '<label class="checkline"><input type="checkbox" '+f('role:'+r[0])+chk(e.roles[r[0]])+'> '+r[1]+'</label>'; });
+    h += '</div><div class="checkline"><label class="checkline" style="margin:0"><input type="checkbox" '+f('role:other')+chk(e.roles.other)+'> Other:</label>'
+      + '<input type="text" '+f('otherText')+' value="'+escapeAttr(e.roles.otherText)+'" aria-label="Other role" placeholder="Specify role"'+(e.roles.other?'':' disabled')+'></div>';
+    h += '<div class="field" style="margin-top:.6rem"><label>Shareholding % <span class="opt">(optional)</span></label>'
+      + '<input type="number" '+f('pct')+' min="0" max="100" step="0.01" placeholder="0-100" value="'+(e.pct!=null?e.pct:'')+'"></div>';
+    h += '<div class="ec-ubo'+(e.roles.ubo?'':' hidden')+'"><p class="group-label">UBO basis</p><div class="grid2">'
+      + '<label class="checkline"><input type="radio" name="ubo_'+id+'" value="ownership" '+f('uboBasis')+chk(e.uboBasis==='ownership')+'> Ownership</label>'
+      + '<label class="checkline"><input type="radio" name="ubo_'+id+'" value="control" '+f('uboBasis')+chk(e.uboBasis==='control')+'> Control (no shareholding)</label></div>'
+      + '<div class="grid2"><div class="field ec-ubopct'+(e.uboBasis==='ownership'?'':' hidden')+'"><label>UBO Ownership %</label><input type="number" '+f('uboPct')+' min="0" max="100" step="0.01" value="'+(e.uboPct!=null?e.uboPct:'')+'"></div>'
+      + '<div class="field ec-uboctl'+(e.uboBasis==='control'?'':' hidden')+'"><label>Nature of control</label><select '+f('controlType')+'>'
+      + CONTROL_TYPES.map(function(c){ return '<option'+(e.controlType===c?' selected':'')+'>'+c+'</option>'; }).join('')
+      + '</select></div></div></div>';
+    h += '<label class="checkline" style="margin-top:.6rem"><input type="checkbox" '+f('verified')+chk(e.verified===true)+'> Verified against source documents</label>';
+    h += '<p class="group-label" style="margin-top:.6rem">Source of information <span class="opt">(tick all that apply)</span></p><div class="grid2">';
+    CARD_SOURCES.forEach(function(src){ h += '<label class="checkline"><input type="checkbox" '+f('src:'+src)+chk((e.sources||[]).indexOf(src)!==-1)+'> '+src+'</label>'; });
+    h += '</div></div></details>';
+    return h;
+  }
+
+  function renderEntryCards(){
+    var wrap = $('entryCards');
+    if(!entities.length){ wrap.innerHTML = ''; $('entryCardsHead').classList.add('hidden'); return; }
+    $('entryCardsHead').classList.remove('hidden');
+    $('entryCount').textContent = entities.length + (entities.length===1 ? ' entry' : ' entries');
+    // keep what the user opened/closed; new cards follow the default for this list size
+    var state = {};
+    wrap.querySelectorAll('.entry-card').forEach(function(c){ state[c.getAttribute('data-id')] = c.open; });
+    var def = cardsOpenDefault!=null ? cardsOpenDefault : entities.length <= 12;
+    wrap.innerHTML = entities.map(function(e, i){
+      return cardHtml(e, i, state[e.id]!==undefined ? state[e.id] : def);
+    }).join('');
+  }
+
+  function refreshCardOwnsOptions(){
+    $('entryCards').querySelectorAll('.entry-card').forEach(function(c){
+      var e = entities.find(function(x){ return x.id===c.getAttribute('data-id'); });
+      var sel = c.querySelector('[data-f="ownsStakeIn"]');
+      if(!e || !sel) return;
+      sel.innerHTML = ownsOptions(e);
+      sel.value = e.ownsStakeIn || 'none';
+    });
+  }
+  function refreshCardHeader(c, e){
+    c.querySelector('.ec-name').textContent = e.name || '(unnamed)';
+    c.querySelector('.ec-sub').textContent = cardSummary(e);
+    c.querySelector('.ec-pct').textContent = cardPct(e);
+  }
+
+  // a percentage field accepts empty or 0-100; anything else is flagged and not applied
+  function pctOk(el){
+    var raw = el.value, n = parseFloat(raw);
+    var ok = raw==='' || (!isNaN(n) && n >= 0 && n <= 100);
+    if(!ok && raw==='' && el.validity && el.validity.badInput) ok = false;
+    el.classList.toggle('pct-bad', !ok);
+    el.setAttribute('aria-invalid', ok ? 'false' : 'true');
+    el.title = ok ? '' : 'Enter a percentage between 0 and 100';
+    return ok;
+  }
+  function onCardEdit(ev){
+    var el = ev.target, key = el.getAttribute && el.getAttribute('data-f');
+    if(!key) return;
+    var c = el.closest('.entry-card');
+    var e = entities.find(function(x){ return x.id===c.getAttribute('data-id'); });
+    if(!e) return;
+    delete e.importBatch;              // edited by hand: a re-import keeps it
+    var relist = false;
+    if(key==='name'){ e.name = el.value.trim(); relist = e.entityType==='company'; }
+    else if(key==='entityType'){
+      e.entityType = el.value; relist = true;
+      c.querySelector('.ec-co').classList.toggle('hidden', e.entityType!=='company');
+      c.querySelector('.ec-pe').classList.toggle('hidden', e.entityType==='company');
+    }
+    else if(key==='ownsStakeIn'){ e.ownsStakeIn = el.value; }
+    else if(key==='pct'){
+      if(!pctOk(el)) return;
+      e.pct = el.value!=='' ? parseFloat(el.value) : null;
+      // a % implies a stake: link to the subject company if nothing else is set
+      if(e.pct!=null && e.pct>0){
+        if(!e.ownsStakeIn || e.ownsStakeIn==='none'){ e.ownsStakeIn = 'root'; c.querySelector('[data-f="ownsStakeIn"]').value = 'root'; }
+        if(!e.roles.shareholder){ e.roles.shareholder = true; c.querySelector('[data-f="role:shareholder"]').checked = true; }
+      }
+    }
+    else if(key.indexOf('role:')===0){
+      var r = key.slice(5); e.roles[r] = el.checked;
+      if(r==='other') c.querySelector('[data-f="otherText"]').disabled = !el.checked;
+      if(r==='ubo'){
+        c.querySelector('.ec-ubo').classList.toggle('hidden', !el.checked);
+        if(!el.checked){ e.uboBasis = null; e.uboPct = null; }
+      }
+    }
+    else if(key==='otherText'){ e.roles.otherText = el.value.trim(); }
+    else if(key==='uboBasis'){
+      e.uboBasis = el.value;
+      c.querySelector('.ec-ubopct').classList.toggle('hidden', e.uboBasis!=='ownership');
+      c.querySelector('.ec-uboctl').classList.toggle('hidden', e.uboBasis!=='control');
+      if(e.uboBasis==='control' && !e.controlType) e.controlType = c.querySelector('[data-f="controlType"]').value;
+    }
+    else if(key==='uboPct'){ if(!pctOk(el)) return; e.uboPct = el.value!=='' ? parseFloat(el.value) : null; }
+    else if(key==='controlType'){ e.controlType = el.value; }
+    else if(key==='verified'){ e.verified = el.checked; }
+    else if(key.indexOf('src:')===0){
+      var src = key.slice(4); e.sources = (e.sources||[]).filter(function(s){ return s!==src; });
+      if(el.checked) e.sources.push(src);
+    }
+    else if(key==='jurisdiction' || key==='regNo' || key==='dob' || key==='taxId'){ e[key] = el.value.trim(); }
+    refreshCardHeader(c, e);
+    if(relist){ refreshCardOwnsOptions(); refreshOwnsDropdown(editingEntityId); }
+    requestAnimationFrame(renderDiagram);
+  }
+  $('entryCards').addEventListener('input', onCardEdit);
+  $('entryCards').addEventListener('click', function(ev){
+    var btn = ev.target.closest('[data-remove]');
+    if(!btn) return;
+    ev.preventDefault();               // don't toggle the card
+    var e = entities.find(function(x){ return x.id===btn.getAttribute('data-remove'); });
+    if(e && confirm('Remove "' + (e.name||'this entry') + '"?')){ deleteEntity(e.id); scheduleSave(); }
+  });
+  $('expandAllBtn').addEventListener('click', function(){
+    cardsOpenDefault = true;
+    $('entryCards').querySelectorAll('.entry-card').forEach(function(c){ c.open = true; });
+  });
+  $('collapseAllBtn').addEventListener('click', function(){
+    cardsOpenDefault = false;
+    $('entryCards').querySelectorAll('.entry-card').forEach(function(c){ c.open = false; });
+  });
+
+  // open, scroll to and briefly mark a card (used by the diagram)
+  function focusCard(id){
+    var c = $('entryCards').querySelector('.entry-card[data-id="'+id+'"]');
+    if(!c) return;
+    c.open = true;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    c.scrollIntoView({block:'start', behavior: reduce ? 'auto' : 'smooth'});
+    c.classList.remove('ec-flash'); void c.offsetWidth; c.classList.add('ec-flash');
+    var first = c.querySelector('[data-f="pct"]') || c.querySelector('input');
+    if(first) first.focus({preventScroll:true});
+  }
+
+  // ---------- diagram (pure SVG, tidy tree) ----------
+  // Owners sit above (vertical) or left of (horizontal) the entity they hold
+  // a stake in. Each subtree reserves its own breadth, so any number of
+  // shareholders and any depth of holding chain lays out without overlap.
+  var diagram = { generated:false, orient:'auto', zoom:'fit' };
+  var DG = {
+    v:{ nw:208, nh:82, nb:208, sib:20, lvl:76 },   // nb = node size along the sibling axis
+    h:{ nw:208, nh:82, nb:82,  sib:14, lvl:104 }
+  };
+
+  function getLayer(id, seen){
+    if(id==='root') return 0;
+    seen = seen || {};
+    if(seen[id]) return 0;
+    seen[id]=true;
+    var e = entities.find(function(x){ return x.id===id; });
+    if(!e) return 0;
+    return 1 + getLayer(e.ownsStakeIn, seen);
+  }
+  function effOwnership(id, seen){
+    if(id==='root') return 100;
+    seen = seen || {};
+    if(seen[id]) return 0;
+    seen[id]=true;
+    var e = entities.find(function(x){ return x.id===id; });
+    if(!e || e.pct==null) return 0;
+    return (e.pct/100) * effOwnership(e.ownsStakeIn, seen);
+  }
+
+  function linkedEntities(){
+    return entities.filter(function(e){ return e.ownsStakeIn && e.ownsStakeIn!=='none'; });
+  }
+
+  // Build the owner tree rooted at the subject company. Entries whose chain
+  // never reaches the subject (circular or pointing at a deleted entry) are
+  // returned separately so they can be reported instead of silently dropped.
+  function buildOwnerTree(){
+    var linked = linkedEntities();
+    var kids = {};
+    linked.forEach(function(e){ (kids[e.ownsStakeIn] = kids[e.ownsStakeIn] || []).push(e); });
+    Object.keys(kids).forEach(function(k){
+      kids[k].sort(function(a,b){
+        var ao = kids[a.id] ? 1 : 0, bo = kids[b.id] ? 1 : 0;
+        if(ao!==bo) return bo-ao;                       // holding companies first
+        return (b.pct||0) - (a.pct||0);                 // then largest stake
+      });
+    });
+    var seen = {};
+    function make(id, ent, depth){
+      seen[id] = true;
+      var node = { id:id, ent:ent, depth:depth, children:[] };
+      (kids[id]||[]).forEach(function(c){
+        if(!seen[c.id]) node.children.push(make(c.id, c, depth+1));
+      });
+      return node;
+    }
+    var root = make('root', null, 0);
+    var orphans = linked.filter(function(e){ return !seen[e.id]; });
+    return { root:root, orphans:orphans, kids:kids };
+  }
+
+  function measureTree(node, g){
+    node.children.forEach(function(c){ measureTree(c, g); });
+    var sum = 0;
+    node.children.forEach(function(c, i){ sum += c.span + (i ? g.sib : 0); });
+    node.span = Math.max(g.nb, sum);
+    node.childSpan = sum;
+    node.height = 1 + node.children.reduce(function(m, c){ return Math.max(m, c.height); }, 0);
+  }
+  // b = breadth offset of this subtree, depth measured from the subject company
+  function placeTree(node, b){
+    node.b = b + node.span/2;
+    var cur = b + (node.span - node.childSpan)/2;
+    node.children.forEach(function(c){
+      placeTree(c, cur);
+      cur += c.span + node._g.sib;
+    });
+  }
+  function eachNode(node, fn){ fn(node); node.children.forEach(function(c){ eachNode(c, fn); }); }
+
+  function pickOrient(tree){
+    if(diagram.orient!=='auto') return diagram.orient;
+    var widest = 0;
+    eachNode(tree.root, function(n){ widest = Math.max(widest, n.children.length); });
+    // Wide, shallow structures read better horizontally; the page scrolls vertically.
+    eachNode(tree.root, function(n){ n._g = DG.v; });
+    measureTree(tree.root, DG.v);
+    return (widest > 6 || tree.root.span > 1800) ? 'h' : 'v';
+  }
+
+  function renderDiagram(){
+    var canvas = $('canvas');
+    var linked = linkedEntities();
+    updateDiagramToolbar(linked.length);
+    if(!diagram.generated){
+      canvas.innerHTML = '<p class="table-empty diagram-empty">' + (linked.length
+        ? linked.length + ' ownership-linked ' + (linked.length===1?'entry is':'entries are') + ' ready. Click <strong>Generate diagram</strong> to draw the structure.'
+        : 'No ownership-linked entries yet. Import JSON or give an entry an ownership link, then generate the diagram.') + '</p>';
+      $('diagramIssues').innerHTML = '';
+      return;
+    }
+    if(!linked.length){
+      canvas.innerHTML = '<p class="table-empty diagram-empty">No ownership-linked entries yet. Give an entry an ownership link to draw it here.</p>';
+      $('diagramIssues').innerHTML = '';
+      return;
+    }
+
+    var tree = buildOwnerTree();
+    var orient = pickOrient(tree);
+    var g = DG[orient];
+    eachNode(tree.root, function(n){ n._g = g; });
+    measureTree(tree.root, g);
+    placeTree(tree.root, 0);
+
+    var pad = 28, levels = tree.root.height;
+    var breadth = tree.root.span, depthLen = levels*(orient==='v'?g.nh:g.nw) + (levels-1)*g.lvl;
+    var W = orient==='v' ? breadth + pad*2 : depthLen + pad*2;
+    var H = orient==='v' ? depthLen + pad*2 : breadth + pad*2;
+
+    // Box position: owners further from the subject go up (v) or left (h).
+    function box(n){
+      var lvlFromTop = levels - 1 - n.depth;
+      if(orient==='v') return { x: pad + n.b - g.nw/2, y: pad + lvlFromTop*(g.nh+g.lvl), w:g.nw, h:g.nh };
+      return { x: pad + lvlFromTop*(g.nw+g.lvl), y: pad + n.b - g.nh/2, w:g.nw, h:g.nh };
+    }
+
+    var issues = [];
+    var edges = '', pills = '', nodes = '';
+    eachNode(tree.root, function(n){
+      var pb = box(n);
+      n.children.forEach(function(c){
+        var cb = box(c), d, px, py;
+        if(orient==='v'){
+          var cx = cb.x + cb.w/2, bus = pb.y - g.lvl/2;
+          d = 'M '+cx+' '+(cb.y+cb.h)+' V '+bus+' H '+(pb.x+pb.w/2)+' V '+pb.y;
+          px = cx; py = cb.y + cb.h + 14;
+        } else {
+          var cy = cb.y + cb.h/2, busX = pb.x - g.lvl/2;
+          d = 'M '+(cb.x+cb.w)+' '+cy+' H '+busX+' V '+(pb.y+pb.h/2)+' H '+pb.x;
+          px = cb.x + cb.w + 28; py = cy;
+        }
+        edges += '<path d="'+d+'" fill="none" stroke="var(--line-strong, #9aa7ac)" stroke-width="1.4" stroke-linejoin="round"/>';
+        var label = c.ent.pct==null ? 'n/a' : fmtPct(c.ent.pct);
+        var pw = Math.max(40, label.length*6.4 + 14);
+        pills += '<rect x="'+(px-pw/2)+'" y="'+(py-9)+'" width="'+pw+'" height="18" rx="9" fill="var(--raised, #ffffff)" stroke="var(--line-strong, #c9d1d4)"/>'
+              +  '<text x="'+px+'" y="'+(py+4)+'" font-size="10.5" font-weight="600" text-anchor="middle" fill="var(--muted, #5b6b73)">'+label+'</text>';
+      });
+      // arrowhead into the owned entity (drawn once per parent)
+      if(n.children.length){
+        var a = orient==='v'
+          ? 'M '+(pb.x+pb.w/2-4.5)+' '+(pb.y-7)+' L '+(pb.x+pb.w/2)+' '+pb.y+' L '+(pb.x+pb.w/2+4.5)+' '+(pb.y-7)+' Z'
+          : 'M '+(pb.x-7)+' '+(pb.y+pb.h/2-4.5)+' L '+pb.x+' '+(pb.y+pb.h/2)+' L '+(pb.x-7)+' '+(pb.y+pb.h/2+4.5)+' Z';
+        edges += '<path d="'+a+'" fill="var(--line-strong, #9aa7ac)"/>';
+      }
+
+      var owned = n.children.reduce(function(s, c){ return s + (c.ent.pct||0); }, 0);
+      var missing = n.children.some(function(c){ return c.ent.pct==null; });
+      var ownersLine = null, ownersWarn = false;
+      if(n.children.length){
+        ownersLine = 'Owners recorded: ' + fmtPct(owned) + (missing ? ' + n/a' : '');
+        if(owned > 100.05){ /* tolerance for registry rounding, e.g. 33.34 + 33.33 + 33.34 */ ownersWarn = true; issues.push(nodeName(n) + ': owners add up to ' + fmtPct(owned) + ' (over 100%).'); }
+      }
+      if(n.id==='root'){
+        nodes += nodeSvg(pb, nodeName(n), 'Subject company', 'var(--root-soft, #e4e9ea)', 'var(--root, #3a4a52)', ownersLine, ownersWarn);
+      } else {
+        var e = n.ent, badge = badgeFor(e);
+        var sub = (e.entityType==='person'?'Natural person':'Legal entity') + (e.jurisdiction ? ' · '+e.jurisdiction : '') + (badge ? ' · '+badge.text : '');
+        var fill = e.entityType==='person' ? 'var(--person-soft, #f1decb)' : 'var(--entity-soft, #dbe7ee)';
+        var stroke = e.entityType==='person' ? 'var(--person, #8f5516)' : 'var(--entity, #2f6690)';
+        var foot = fmtPct(effOwnership(e.id)) + ' effective' + (ownersLine ? ' · ' + ownersLine.replace('Owners recorded: ','owners ') : '');
+        if(e.entityType==='person' && n.children.length) issues.push(e.name + ' is a natural person but has owners linked to it.');
+        nodes += nodeSvg(pb, e.name||'(unnamed)', sub, fill, stroke, foot, ownersWarn, e.id);
+      }
+    });
+    tree.orphans.forEach(function(e){
+      issues.push((e.name||'(unnamed)') + ' is not drawn: its ownership chain loops back on itself or points to a removed entry.');
+    });
+
+    var svg = '<svg id="ownershipSvg" data-w="'+W+'" data-h="'+H+'" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif" role="img" aria-label="Ownership diagram of '+escapeAttr(nodeName(tree.root))+'">'
+      + '<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="var(--paper, #f4f6f5)"/>'
+      + edges + nodes + pills + '</svg>';
+    canvas.innerHTML = svg;
+    diagram.orientUsed = orient;
+    applyZoom();
+    updateDiagramToolbar(linked.length);
+
+    $('diagramIssues').innerHTML = issues.length
+      ? '<strong>Check the structure</strong><ul>' + issues.map(function(t){ return '<li>'+escapeHtml(t)+'</li>'; }).join('') + '</ul>'
+      : '';
+    $('diagramIssues').classList.toggle('hidden', !issues.length);
+    $('diagramMeta').textContent = linked.length + ' ownership ' + (linked.length===1?'link':'links') + ', ' + levels + ' ' + (levels===1?'level':'levels');
+  }
+
+  function nodeName(n){ return n.id==='root' ? ($('cp_name').value.trim() || 'Subject company') : (n.ent.name||'(unnamed)'); }
+  function fmtPct(v){ return (Math.round(v*100)/100).toString() + '%'; }
+
+  // Rough text width so wrapping works for wide scripts (e.g. all-caps Greek registry names)
+  function estWidth(str, size){
+    var w = 0;
+    for(var i=0;i<str.length;i++){
+      var ch = str[i];
+      w += ch===' ' ? .3 : (ch!==ch.toLowerCase() || /[0-9%]/.test(ch)) ? .7 : .56;
+    }
+    return w * size;
+  }
+  function fitText(str, size, max){
+    str = String(str);
+    if(estWidth(str, size) <= max) return str;
+    while(str.length > 1 && estWidth(str + '…', size) > max) str = str.slice(0, -1);
+    return str.replace(/\s+$/,'') + '…';
+  }
+  // Up to two lines, broken at spaces; the second line is shortened if still too long
+  function wrapTitle(str, size, max){
+    str = String(str);
+    if(estWidth(str, size) <= max) return [str];
+    var words = str.split(/\s+/), line = '';
+    for(var i=0;i<words.length;i++){
+      var next = line ? line + ' ' + words[i] : words[i];
+      if(estWidth(next, size) > max && line){
+        return [line, fitText(words.slice(i).join(' '), size, max)];
+      }
+      line = next;
+    }
+    return [fitText(str, size, max)];
+  }
+  function nodeSvg(pos, title, sub, fill, stroke, foot, warn, id){
+    var inner = pos.w - 24, x = pos.x + 12;
+    var lines = wrapTitle(title, 12.5, inner);
+    var two = lines.length > 1;
+    var s = id ? '<g class="node-link" data-entity="'+id+'" tabindex="0" role="button" aria-label="Edit '+escapeAttr(title)+'">' : '<g>';
+    s += '<title>'+escapeHtml(title)+'</title>';
+    s += '<rect x="'+pos.x+'" y="'+pos.y+'" width="'+pos.w+'" height="'+pos.h+'" rx="8" fill="'+fill+'" stroke="'+(warn?'var(--danger, #b3452c)':stroke)+'" stroke-width="'+(warn?1.8:1.2)+'"/>';
+    lines.forEach(function(l, i){
+      s += '<text x="'+x+'" y="'+(pos.y + (two ? 19 : 22) + i*15)+'" font-size="12.5" font-weight="700" fill="'+stroke+'">'+escapeHtml(l)+'</text>';
+    });
+    s += '<text x="'+x+'" y="'+(pos.y + (two ? 52 : 39))+'" font-size="10" fill="'+stroke+'" opacity="0.85">'+escapeHtml(fitText(sub, 10, inner))+'</text>';
+    if(foot){
+      s += '<text x="'+x+'" y="'+(pos.y + (two ? 70 : 64))+'" font-size="10.5" font-weight="700" fill="'+(warn?'var(--danger, #b3452c)':stroke)+'">'+escapeHtml(fitText(foot, 10.5, inner))+'</text>';
+    }
+    s += '</g>';
+    return s;
+  }
+  function truncateSvgText(s, n){ s = String(s); return s.length>n ? s.slice(0,n-1)+'…' : s; }
+
+  function applyZoom(){
+    var svgEl = document.getElementById('ownershipSvg');
+    if(!svgEl) return;
+    var W = +svgEl.getAttribute('data-w'), H = +svgEl.getAttribute('data-h');
+    var z = diagram.zoom;
+    if(z==='fit'){
+      var avail = Math.max(280, $('canvas').clientWidth - 2);
+      // fit the width, but never shrink text past readability; wider structures scroll
+      z = Math.max(Math.min(1, avail / W), .7);
+    }
+    svgEl.setAttribute('width', Math.round(W*z));
+    svgEl.setAttribute('height', Math.round(H*z));
+    $('zoomLabel').textContent = Math.round(z*100) + '%';
+    diagram.zoomValue = z;
+  }
+  function setZoom(step){
+    var cur = diagram.zoomValue || 1;
+    diagram.zoom = Math.min(2, Math.max(.25, Math.round((cur + step)*100)/100));
+    applyZoom();
+  }
+
+  function updateDiagramToolbar(count){
+    var has = !!document.getElementById('ownershipSvg');
+    ['zoomOutBtn','zoomInBtn','zoomFitBtn','fullscreenBtn','exportSvgBtn','exportPngBtn'].forEach(function(id){ $(id).disabled = !has; });
+    $('generateDiagramBtn').textContent = diagram.generated ? 'Regenerate' : 'Generate diagram';
+    $('generateDiagramBtn').disabled = !count && !diagram.generated;
+    if(!diagram.generated) $('diagramMeta').textContent = '';
+  }
+
+  function generateDiagram(opts){
+    diagram.generated = true;
+    diagram.zoom = 'fit';
+    renderDiagram();
+    // start with the subject company in view: bottom-centre (top-down) or right-middle (left-right)
+    var c = $('canvas');
+    if(diagram.orientUsed==='h'){ c.scrollLeft = c.scrollWidth; c.scrollTop = (c.scrollHeight - c.clientHeight)/2; }
+    else { c.scrollLeft = (c.scrollWidth - c.clientWidth)/2; c.scrollTop = c.scrollHeight; }
+    if(opts && opts.scroll){
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      $('diagramSection').scrollIntoView({block:'start', behavior: reduce ? 'auto' : 'smooth'});
+    }
+  }
+
+  $('generateDiagramBtn').addEventListener('click', function(){ generateDiagram({scroll:true}); });
+  function openNode(ev){
+    var g = ev.target.closest && ev.target.closest('[data-entity]');
+    if(!g) return;
+    if(ev.type==='keydown' && ev.key!=='Enter' && ev.key!==' ') return;
+    ev.preventDefault();
+    focusCard(g.getAttribute('data-entity'));
+  }
+  $('canvas').addEventListener('click', openNode);
+  $('canvas').addEventListener('keydown', openNode);
+  document.querySelectorAll('#orientToggle button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      diagram.orient = btn.getAttribute('data-orient');
+      document.querySelectorAll('#orientToggle button').forEach(function(b){
+        b.classList.toggle('active', b===btn);
+        b.setAttribute('aria-pressed', b===btn ? 'true' : 'false');
+      });
+      diagram.zoom = 'fit';
+      renderDiagram();
+    });
+  });
+  $('zoomInBtn').addEventListener('click', function(){ setZoom(.15); });
+  $('zoomOutBtn').addEventListener('click', function(){ setZoom(-.15); });
+  $('zoomFitBtn').addEventListener('click', function(){ diagram.zoom = 'fit'; applyZoom(); });
+  $('fullscreenBtn').addEventListener('click', function(){
+    var sec = $('diagramSection');
+    if(document.fullscreenElement){ document.exitFullscreen(); return; }
+    if(sec.requestFullscreen) sec.requestFullscreen().catch(function(){});
+  });
+  document.addEventListener('fullscreenchange', function(){
+    $('fullscreenBtn').textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen';
+    if(diagram.zoom==='fit') requestAnimationFrame(applyZoom);
+  });
+
+  // Downloaded files have no stylesheet: resolve var() to its fallback and
+  // restore the natural (unzoomed) size.
+  function exportableSvg(svgEl){
+    var clone = svgEl.cloneNode(true);
+    clone.setAttribute('width', svgEl.getAttribute('data-w'));
+    clone.setAttribute('height', svgEl.getAttribute('data-h'));
+    return new XMLSerializer().serializeToString(clone).replace(/var\(--[^,)]+,\s*([^)]+)\)/g, '$1');
+  }
+
+  $('exportSvgBtn').addEventListener('click', function(){
+    var svgEl = document.getElementById('ownershipSvg');
+    if(!svgEl){ alert('Generate the diagram first.'); return; }
+    var blob = new Blob([exportableSvg(svgEl)], {type:'image/svg+xml'});
+    downloadBlob(blob, 'ownership-diagram.svg');
+  });
+  $('exportPngBtn').addEventListener('click', function(){
+    var svgEl = document.getElementById('ownershipSvg');
+    if(!svgEl){ alert('Generate the diagram first.'); return; }
+    var w = +svgEl.getAttribute('data-w'), h = +svgEl.getAttribute('data-h');
+    var svgData = exportableSvg(svgEl);
+    var img = new Image();
+    var svgBlob = new Blob([svgData], {type:'image/svg+xml;charset=utf-8'});
+    var url = URL.createObjectURL(svgBlob);
+    img.onload = function(){
+      // 2x for sharpness, capped so very large structures stay within canvas limits
+      var scale = Math.min(2, 14000 / Math.max(w, h));
+      var canvasEl = document.createElement('canvas');
+      canvasEl.width = Math.round(w*scale); canvasEl.height = Math.round(h*scale);
+      var ctx = canvasEl.getContext('2d');
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,canvasEl.width, canvasEl.height);
+      ctx.scale(scale, scale);
+      ctx.drawImage(img, 0, 0, w, h);
+      canvasEl.toBlob(function(blob){ downloadBlob(blob, 'ownership-diagram.png'); URL.revokeObjectURL(url); });
+    };
+    img.src = url;
+  });
+
+  function downloadBlob(blob, filename){
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href=url; a.download=filename;
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }
+
+  function renderAll(){
+    refreshOwnsDropdown(editingEntityId);
+    renderEntryCards();
+    requestAnimationFrame(renderDiagram);
+  }
+  // the subject company's name only appears in dropdowns and the diagram
+  $('cp_name').addEventListener('input', function(){
+    refreshOwnsDropdown(editingEntityId);
+    refreshCardOwnsOptions();
+    requestAnimationFrame(renderDiagram);
+  });
+  window.addEventListener('resize', function(){ if(diagram.zoom==='fit') requestAnimationFrame(applyZoom); });
+
+  // ---------- JSON import ----------
+
+  // Resolve a dot-path like "address.city" from an object
+  function dotGet(obj, path){
+    var parts = path.split('.');
+    var cur = obj;
+    for(var i=0;i<parts.length;i++){
+      if(cur==null||typeof cur!=='object') return undefined;
+      cur = cur[parts[i]];
+    }
+    return (cur===undefined||cur===null||cur==='') ? undefined : cur;
+  }
+
+  // Return first truthy value from list of dot-paths
+  function pickField(obj /*, ...paths */){
+    for(var i=1;i<arguments.length;i++){
+      var v = dotGet(obj, arguments[i]);
+      if(v!==undefined && v!==null && v!=='') return v;
+    }
+    return null;
+  }
+
+  // Normalise % that may come as 0-1 decimal or 0-100
+  function normPct(v){
+    if(v==null) return null;
+    var n = parseFloat(v);
+    if(isNaN(n)) return null;
+    return (n>0 && n<=1) ? n*100 : n;
+  }
+
+  // ---------- Role maps ----------
+  var GEMI_ROLE_MAP = {
+    'ομόρρυθμο μέλος & διαχειριστής': ['shareholder','legalRep'],
+    'ετερόρρυθμο μέλος & διαχειριστής': ['shareholder','legalRep'],
+    'μέλος & διαχειριστής': ['shareholder','legalRep'],
+    'διαχειριστής': ['legalRep'],
+    'εταίρος': ['shareholder'],
+    'ομόρρυθμο μέλος': ['shareholder'],
+    'ετερόρρυθμο μέλος': ['shareholder'],
+    'μέτοχος': ['shareholder'],
+    'πρόεδρος & διευθύνων σύμβουλος': ['legalRep','bod'],
+    'διευθύνων σύμβουλος': ['legalRep'],
+    'πρόεδρος δ.σ.': ['bod'],
+    'μέλος δ.σ.': ['bod']
+  };
+
+  var GENERIC_ROLE_MAP = {
+    // English
+    'director':['bod'],'managing director':['legalRep','bod'],'executive director':['legalRep','bod'],
+    'non-executive director':['bod'],'board member':['bod'],'board of directors':['bod'],
+    'chairman':['bod'],'chair':['bod'],'president':['bod'],
+    'ceo':['legalRep'],'chief executive officer':['legalRep'],'chief executive':['legalRep'],
+    'legal representative':['legalRep'],'representative':['legalRep'],'manager':['legalRep'],
+    'general manager':['legalRep'],'managing member':['legalRep'],'officer':['legalRep'],
+    'shareholder':['shareholder'],'stockholder':['shareholder'],'member':['shareholder'],
+    'partner':['shareholder'],'general partner':['shareholder'],'limited partner':['shareholder'],
+    'participant':['shareholder'],'participant with separate liability':['shareholder'],'participant with joint liability':['shareholder'],
+    'deltaker':['shareholder'],
+    // Spain (Registro Mercantil / credit-bureau English labels)
+    'soc.prof':['shareholder'],'soc. prof':['shareholder'],'socio profesional':['shareholder'],'professional partner':['shareholder'],
+    'socio único':['shareholder'],'socio unico':['shareholder'],'sole shareholder':['shareholder'],'sole partner':['shareholder'],
+    'proxy':['signatory'],'attorney-in-fact':['signatory'],'attorney in fact':['signatory'],'power of attorney':['signatory'],
+    'sole administrator':['legalRep'],'sole managing director':['legalRep'],'administrador unico':['legalRep'],
+    'administrador solidario':['legalRep'],'joint and several director':['legalRep'],'joint and several administrator':['legalRep'],
+    'administrador mancomunado':['legalRep'],'joint director':['legalRep'],'joint administrator':['legalRep'],
+    'consejero delegado solidario':['legalRep','bod'],'presidente':['bod'],'vocal':['bod'],'daglig leder':['legalRep'],'styreleder':['bod'],'styremedlem':['bod'],'nestleder':['bod'],
+    'verkställande direktör':['legalRep'],'toimitusjohtaja':['legalRep'],'administrerende direktør':['legalRep'],
+    'sole trader':['legalRep'],'sole director':['legalRep','bod'],
+    'secretary':['authAdmin'],'company secretary':['authAdmin'],
+    'beneficial owner':['ubo'],'ultimate beneficial owner':['ubo'],'ubo':['ubo'],
+    'signatory':['signatory'],'authorized signatory':['signatory'],'authorised signatory':['signatory'],
+    // French
+    'gérant':['legalRep'],'co-gérant':['legalRep'],
+    'associé':['shareholder'],'actionnaire':['shareholder'],
+    'président':['bod'],'directeur général':['legalRep'],
+    'administrateur':['bod'],'membre du conseil':['bod'],
+    // German
+    'geschäftsführer':['legalRep'],'gesellschafter':['shareholder'],
+    'aktionär':['shareholder'],'aktionaer':['shareholder'],
+    'vorstand':['bod'],'aufsichtsrat':['bod'],'prokurist':['signatory'],
+    // Spanish
+    'administrador':['legalRep'],'administrador único':['legalRep'],
+    'socio':['shareholder'],'accionista':['shareholder'],
+    'consejero':['bod'],'consejero delegado':['legalRep'],
+    'apoderado':['signatory'],
+    // Italian
+    'amministratore':['legalRep'],'amministratore unico':['legalRep'],
+    'amministratore delegato':['legalRep'],'consigliere delegato':['legalRep'],
+    'socio':['shareholder'],'azionista':['shareholder'],
+    'consigliere':['bod'],'liquidatore':['legalRep'],
+    // Dutch
+    'bestuurder':['legalRep'],'directeur':['legalRep'],
+    'aandeelhouder':['shareholder'],'vennoot':['shareholder'],
+    'commissaris':['bod'],'gevolmachtigde':['signatory'],
+    // Portuguese
+    'gerente':['legalRep'],'sócio':['shareholder'],'administrador':['legalRep'],
+    'accionista':['shareholder'],'procurador':['signatory'],
+    // Polish
+    'prezes':['legalRep'],'wspólnik':['shareholder'],'udziałowiec':['shareholder'],
+    // Czech/Slovak
+    'jednatel':['legalRep'],'společník':['shareholder'],
+    // Romanian
+    'administrator':['legalRep'],'asociat':['shareholder'],'acționar':['shareholder'],
+    // Bulgarian
+    'управител':['legalRep'],'съдружник':['shareholder'],'акционер':['shareholder'],
+    // Greek (extras beyond GEMI)
+    'νόμιμος εκπρόσωπος':['legalRep'],'εκπρόσωπος':['legalRep'],
+    'μέλος διοικητικού συμβουλίου':['bod'],'πρόεδρος':['bod']
+  };
+
+  // Map a role string to roles array using both maps + partial match
+  // service providers that carry no powers: keep their title under "Other"
+  var NO_POWER_ROLE = /(accounting secretary|accountant|bookkeeper|auditor|regnskapsf|revisor|λογιστ|ελεγκτ|wirtschaftspr|steuerberater|comptable|commissaire aux comptes)/i;
+  function mapRole(roleStr){
+    if(!roleStr) return null;
+    if(NO_POWER_ROLE.test(roleStr)) return null;
+    var s = roleStr.toLowerCase().trim();
+    if(GEMI_ROLE_MAP[s]) return GEMI_ROLE_MAP[s];
+    if(GENERIC_ROLE_MAP[s]) return GENERIC_ROLE_MAP[s];
+    // Partial match: the longest known title inside the text wins
+    // ("Sole Managing Director" is a managing director, not just a director)
+    var best = null, bestLen = 0;
+    [GENERIC_ROLE_MAP, GEMI_ROLE_MAP].forEach(function(map){
+      for(var k in map){
+        if(k.length > bestLen && s.indexOf(k)!==-1){ best = map[k]; bestLen = k.length; }
+      }
+    });
+    return best;
+  }
+
+  // ---------- Status normalisation (multi-language) ----------
+  var STATUS_MAP = {
+    'active':'Active','ενεργή':'Active','ενεργός':'Active','ενεργος':'Active',
+    'actief':'Active','aktiv':'Active','actif':'Active','activa':'Active',
+    'attiva':'Active','activo':'Active','live':'Active','registered':'Active',
+    'incorporated':'Active','open':'Active','operating':'Active','normal':'Active',
+    'in liquidation':'In liquidation','liquidation':'In liquidation',
+    'υπό εκκαθάριση':'In liquidation','σε εκκαθάριση':'In liquidation',
+    'in vereffening':'In liquidation','en liquidation':'In liquidation',
+    'in liquidazione':'In liquidation','en liquidación':'In liquidation',
+    'dissolved':'Dissolved','διαλύθηκε':'Dissolved','λυθείσα':'Dissolved',
+    'aufgelöst':'Dissolved','dissous':'Dissolved','disuelto':'Dissolved',
+    'inactive':'Dissolved','closed':'Dissolved','struck off':'Dissolved',
+    'deregistered':'Dissolved','cancelled':'Dissolved','revoked':'Dissolved'
+  };
+
+  function setStatus(val){
+    if(!val) return;
+    var s = String(val).toLowerCase().trim();
+    var mapped = STATUS_MAP[s];
+    var sel = $('cp_status');
+    if(mapped){ sel.value=mapped; sel.classList.add('prefilled'); }
+    else { setPrefilled('cp_status', val); }
+  }
+
+  // ---------- GEMI parser (Greece) ----------
+  function parseGEMIjson(obj){
+    setPrefilled('cp_name', obj.coNameEl || (obj.coNamesEn&&obj.coNamesEn[0])||'');
+    if(obj.coNamesEn&&obj.coNamesEn[0]&&obj.coNameEl) setPrefilled('cp_tradeName', obj.coNamesEn[0]);
+    setPrefilled('cp_legalForm', obj.legalType && obj.legalType.descr);
+    setPrefilled('cp_regNo', obj.arGemi);
+    setPrefilled('cp_taxNumber', obj.afm);
+    setPrefilled('cp_incorporated', (obj.incorporationDate||'').slice(0,10));
+    setPrefilled('cp_country', 'GR');
+    var addrParts=[obj.street,obj.streetNumber,obj.city,obj.zipCode,obj.municipality&&obj.municipality.descr,obj.prefecture&&obj.prefecture.descr].filter(Boolean);
+    setPrefilled('cp_address', addrParts.join(', '));
+    if(obj.status&&obj.status.descr) setStatus(obj.status.descr);
+    var ctx = importStakeholders(obj, 'gemi');
+    $('jsonStatus').textContent = 'GEMI (GR): company imported, ' + importSummary(ctx) + '.'
+      + (linkedEntities().length ? ' Click Generate diagram to draw the structure.' : ' Review and complete manually.');
+    $('jsonUploadBox').classList.add('has-data');
+    renderAll();
+  }
+
+  // ---------- Ownership importer (generic JSON) ----------
+  // Reads every stakeholder list it recognises, follows nested owners
+  // (a holding company's own shareholders) to any depth, and resolves flat
+  // "owns a stake in <id/name>" references. One entry per record, never merged.
+  var LIST_KEYS = {
+    shareholders:'shareholder', shareHolders:'shareholder', share_holders:'shareholder',
+    owners:'shareholder', ownership:'shareholder', ownershipStructure:'shareholder', ownership_structure:'shareholder',
+    partners:'shareholder', members:null, equityHolders:'shareholder', equity_holders:'shareholder',
+    beneficialOwners:'ubo', beneficial_owners:'ubo', ubos:'ubo', UBOs:'ubo',
+    directors:'bod', board:'bod', board_members:'bod', boardMembers:'bod',
+    officers:'legalRep', representatives:'legalRep', legalRepresentatives:'legalRep', management:'legalRep', executives:'legalRep',
+    signatories:'signatory', persons:null, people:null, stakeholders:null, principals:null, associates:null,
+    relatedParties:null, related_parties:null, entities:null, parties:null
+  };
+  // keys on a record that hold that record's own owners
+  var OWNER_KEYS = ['shareholders','shareHolders','share_holders','owners','ownedBy','owned_by','ownership',
+    'members','partners','equityHolders','beneficialOwners','beneficial_owners','ubos','stakeholders','persons','children','parents'];
+  // keys on a record that point at the entity it holds a stake in
+  var TARGET_KEYS = ['parentId','parent_id','parent','ownsStakeIn','owns_stake_in','ownerOf','owner_of',
+    'shareholderOf','shareholder_of','holdsSharesIn','holds_shares_in','investee','investeeId','investee_id',
+    'ownedEntity','owned_entity','ownedEntityId','owned_entity_id','targetId','target_id','subsidiaryOf','subsidiary_of'];
+  var OWN_ID_KEYS = ['id','uid','uuid','entityId','entity_id','stakeholderId','stakeholder_id','personId','person_id','key','ref','reference'];
+  var PCT_KEYS = ['percentage','beneficialOwnershipPercentage','beneficial_ownership_percentage','percent','pct','shareholding','shareholdingPercentage','shareholding_percentage',
+    'sharePercentage','share_percentage','sharesPercentage','shares_percentage','ownershipPercentage','ownership_percentage',
+    'percentOwned','percent_owned','ownershipPct','ownership_pct','stake','stakePercentage','holding','holdingPercentage',
+    'equity','equityPercentage','capitalPercentage','capital_percentage','ownership.percentage','ownership.percent',
+    'shares.percentage'];
+  var SHARE_COUNT_KEYS = ['shares','numberOfShares','number_of_shares','shareCount','share_count','sharesHeld','shares_held','quotas'];
+  var COMPANY_SUFFIX = /\b(ltd|limited|llc|l\.l\.c|inc|incorporated|corp|corporation|plc|gmbh|ag|kg|ohg|ug|s\.?a\.?|s\.?a\.?s|sarl|s\.?à\.?r\.?l|s\.?r\.?l|s\.?p\.?a|s\.?l|b\.?v|n\.?v|a\.?e|e\.?p\.?e|ike|i\.k\.e|o\.?e|e\.?e|ab|as|a\/s|oy|oyj|kft|zrt|sp\.? z o\.?o|s\.?r\.?o|a\.?s|d\.?o\.?o|ltda|holdings?|group|trust|fund|foundation|partnership|lp|llp|company|co\.|ε\.?π\.?ε|α\.?ε|ι\.?κ\.?ε|ο\.?ε)\b\.?/i;
+
+  function firstDefined(obj, keys){
+    for(var i=0;i<keys.length;i++){
+      var v = dotGet(obj, keys[i]);
+      if(v!==undefined && v!==null && v!=='') return v;
+    }
+    return null;
+  }
+  function parsePctValue(v){
+    if(v==null) return null;
+    if(typeof v==='object') v = v.value!=null ? v.value : (v.percentage!=null ? v.percentage : (v.percent!=null ? v.percent : null));
+    if(v==null) return null;
+    if(typeof v==='string'){
+      var s = v.replace(/\s/g,'').replace('%','');
+      if(/^\d+,\d+$/.test(s)) s = s.replace(',', '.');   // "25,5" decimal comma
+      v = s;
+    }
+    var n = parseFloat(v);
+    return isNaN(n) ? null : n;
+  }
+  function recordName(p){
+    var n = firstDefined(p, ['name','fullName','full_name','legalName','legal_name','legalEntityName','legal_entity_name',
+      'entityName','entity_name','companyName','company_name','businessName','business_name','personName','person_name',
+      'displayName','display_name','denominazione','nom','nombre','naam','firmenname']);
+    if(n && typeof n==='object') n = n.name || n.value || n.full || null;
+    if(!n && (p.firstName||p.first_name||p.givenName||p.given_name||p.lastName||p.last_name||p.surname)){
+      n = [p.firstName||p.first_name||p.givenName||p.given_name||'', p.middleName||p.middle_name||'',
+           p.lastName||p.last_name||p.familyName||p.family_name||p.surname||''].filter(Boolean).join(' ');
+    }
+    return n ? String(n).replace(/\s+/g,' ').trim() : '';
+  }
+  var END_SUFFIX = /(^|[\s,])(ltd|limited|llc|inc|plc|gmbh|ag|kg|s\.?a\.?|sas|sarl|srl|s\.?p\.?a|b\.?v|n\.?v|a\.?e|ε\.?π\.?ε|α\.?ε|ι\.?κ\.?ε|ο\.?ε|epe|ike|ab|as|asa|a\/s|aps|oy|oyj|ans|da|kft|zrt|s\.?r\.?o|d\.?o\.?o|ltda|lp|llp|corp)\.?$/i;
+  function isCompanyRecord(p, name, hasOwners){
+    if(END_SUFFIX.test(String(name||'').trim())) return true;
+    var t = String(p.entityType||p.entity_type||p.type||p.kind||p.personType||p.person_type||p.partyType||p.category||'').toLowerCase();
+    if(/natural|individual|person(?!ne)|human|private/.test(t) && !/legal/.test(t)) return false;
+    if(/legal|company|corporate|corporation|organi[sz]ation|entity|business|firm|trust|fund|partnership|juridical|legal_person/.test(t)) return true;
+    if(p.isCompany===true || p.is_company===true || p.isLegalEntity===true) return true;
+    if(p.isCompany===false || p.isNaturalPerson===true || p.is_natural_person===true) return false;
+    if(p.businessName||p.business_name||p.companyName||p.company_name||p.legalEntityName||p.legal_entity_name) return true;
+    if(p.dateOfBirth||p.date_of_birth||p.dob||p.birthDate||p.firstName||p.first_name) return false;
+    if(hasOwners) return true;
+    if(p.registrationNumber||p.registration_number||p.lei||p.companyNumber||p.company_number) return true;
+    return COMPANY_SUFFIX.test(name||'');
+  }
+  function ownerListsOf(p){
+    var out = [];
+    OWNER_KEYS.forEach(function(k){
+      if(Array.isArray(p[k]) && p[k].length && typeof p[k][0]==='object') out.push({ list:p[k], role: LIST_KEYS[k]!==undefined ? LIST_KEYS[k] : 'shareholder' });
+    });
+    return out;
+  }
+  function blankEntity(){
+    return {
+      id:genId(), name:'', entityType:'person', ownsStakeIn:'none', pct:null,
+      roles:{shareholder:false,ubo:false,legalRep:false,authAdmin:false,signatory:false,bod:false,other:false,otherText:''},
+      uboBasis:null, uboPct:null, controlType:'', jurisdiction:'', regNo:'', dob:'', taxId:'',
+      verified:null, sources:[], sourceTag:'json', importBatch:'json'
+    };
+  }
+
+  // Percentages for one sibling group: detect 0-1 fractions across the whole
+  // group (so a lone 1 means 1%, not 100%), and fall back to share counts.
+  var PCT_NAME = /(percent|pct|ποσοστ|participation|συμμετοχ|stake|holding|ownership|equity|μερίδ|μεριδ|shareholding)/i;
+  var PCT_NAME_EXCLUDE = /(date|ημερομ|_?id$|count|number|amount|ποσό)/i;
+  // Fallback for exports that use their own field name, e.g. "ποσοστό": "50,00"
+  function scanPct(p, depth){
+    depth = depth || 0;
+    var keys = Object.keys(p||{});
+    for(var i=0;i<keys.length;i++){
+      var k = keys[i], v = p[k];
+      if(v && typeof v==='object' && !Array.isArray(v) && depth<2 && PCT_NAME.test(k)){
+        var inner = scanPct(v, depth+1); if(inner!=null) return inner;
+        var iv = parsePctValue(v); if(iv!=null && iv>0 && iv<=100) return iv;
+      }
+      if(v==null || typeof v==='object' || !PCT_NAME.test(k) || PCT_NAME_EXCLUDE.test(k)) continue;
+      var n = parsePctValue(v);
+      if(n!=null && n>0 && n<=100) return n;
+    }
+    return null;
+  }
+  function pctOf(p){
+    var v = parsePctValue(firstDefined(p, PCT_KEYS));
+    return v!=null ? v : scanPct(p);
+  }
+  // Registry exports often keep past officers/owners with an end date: skip those.
+  function endDateOf(p){
+    var end = firstDefined(p, ['dtTo','dateTo','date_to','endDate','end_date','toDate','to_date','validTo','valid_to',
+      'ceasedOn','ceased_on','resignedOn','resigned_on','terminationDate','termination_date','dateEnd','ημερομηνίαΛήξης']);
+    return (end && typeof end!=='object') ? String(end).slice(0,10) : '';
+  }
+  function hasEnded(p){
+    if(p.active===false || p.isActive===false || p.current===false || p.isCurrent===false) return true;
+    var end = endDateOf(p);
+    if(!end) return false;
+    var str = String(end).trim(), d = null, m;
+    if((m = str.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})/))) d = new Date(+m[3], +m[2]-1, +m[1]);
+    else if(/^\d{4}-\d{2}-\d{2}/.test(str)) d = new Date(str.slice(0,10));
+    return !!(d && !isNaN(d) && d < new Date());
+  }
+
+  function groupPercentages(list){
+    var raw = list.map(function(p){ return p ? pctOf(p) : null; });
+    var vals = raw.filter(function(v){ return v!=null; });
+    // a flat list mixes owners of different entities, so its total is not a sibling total
+    var flat = list.some(function(p){ return p && firstDefined(p, TARGET_KEYS)!=null; });
+    var fraction = vals.length && vals.every(function(v){ return v>=0 && v<=1; })
+      && (flat || vals.reduce(function(a,b){ return a+b; }, 0) <= 1.0001) && vals.some(function(v){ return v>0 && v<1; });
+    var pcts = raw.map(function(v){ return v==null ? null : (fraction ? v*100 : v); });
+    if(!vals.length){
+      var shares = list.map(function(p){ return parsePctValue(firstDefined(p, SHARE_COUNT_KEYS)); });
+      var total = shares.reduce(function(a,b){ return a + (b||0); }, 0);
+      if(total > 0 && shares.every(function(s){ return s!=null; })){
+        pcts = shares.map(function(s){ return s/total*100; });
+      }
+    }
+    return pcts.map(function(v){ return v==null ? null : Math.round(v*10000)/10000; });
+  }
+
+  function personKey(name){
+    return String(name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+  }
+  // Combine a duplicate record b into entry a: roles add up, blanks are filled.
+  function mergeEntityInto(a, b, ctx){
+    Object.keys(b.roles).forEach(function(r){
+      if(r==='otherText') return;
+      if(b.roles[r]) a.roles[r] = true;
+    });
+    if(b.roles.otherText && (a.roles.otherText||'').indexOf(b.roles.otherText)===-1){
+      a.roles.otherText = a.roles.otherText ? a.roles.otherText + ', ' + b.roles.otherText : b.roles.otherText;
+    }
+    var aHadPct = a.pct!=null && a.pct>0;
+    if(b.pct!=null){
+      if(a.pct==null){ a.pct = b.pct; }
+      else if(Math.abs(a.pct - b.pct) > 1e-9){
+        // two concurrent holdings (e.g. two share classes): add them and say so
+        ctx.summed.push(a.name + ' (' + fmtPct(a.pct) + ' + ' + fmtPct(b.pct) + ')');
+        a.pct = Math.round((a.pct + b.pct)*10000)/10000;
+      }
+      if(b.pct>0 && aHadPct && ctx.withPct) ctx.withPct--;   // count each entry once
+    }
+    if((!a.ownsStakeIn || a.ownsStakeIn==='none') && b.ownsStakeIn && b.ownsStakeIn!=='none') a.ownsStakeIn = b.ownsStakeIn;
+    if(b.entityType==='company') a.entityType = 'company';
+    ['jurisdiction','regNo','dob','taxId','controlType'].forEach(function(k){ if(!a[k] && b[k]) a[k] = b[k]; });
+    if(a.uboBasis==null && b.uboBasis!=null){ a.uboBasis = b.uboBasis; a.uboPct = b.uboPct; }
+    if(a.uboPct==null && b.uboPct!=null) a.uboPct = b.uboPct;
+    if(b.verified===true) a.verified = true;
+    else if(a.verified==null && b.verified===false) a.verified = false;
+    (b.sources||[]).forEach(function(s){ if(a.sources.indexOf(s)===-1) a.sources.push(s); });
+  }
+
+  function importStakeholders(obj, sourceLabel){
+    var ctx = { byRef:{}, pending:[], added:0, withPct:0, maxDepth:0, rootRefs:{}, skipped:0, noPct:0, noPctKeys:[], expired:[], byPerson:{}, merged:0, list:[], keysById:{}, summed:[], sameName:[] };
+    // refs that mean "the subject company"
+    [obj.id, obj.uid, obj.registrationNumber, obj.companyNumber, obj.regNo, recordName(obj)].forEach(function(r){
+      if(r!=null && r!=='') ctx.rootRefs[String(r).toLowerCase()] = true;
+    });
+
+    function importList(list, defaultRole, parentId, depth){
+      if(!Array.isArray(list) || depth > 30) return;
+      var pcts = groupPercentages(list);
+      var current = {};
+      list.forEach(function(p){ if(p && typeof p==='object' && !hasEnded(p)) current[recordName(p).toLowerCase()] = true; });
+      list.forEach(function(p, i){
+        if(!p || typeof p!=='object') return;
+        if(hasEnded(p)){
+          if(current[recordName(p).toLowerCase()]){ ctx.skipped++; return; }
+          ctx.expired.push(recordName(p) + (endDateOf(p) ? ' (until ' + endDateOf(p) + ')' : ''));
+        }
+        var owners = ownerListsOf(p);
+        var name = recordName(p) || 'Unnamed';
+        var e = blankEntity();
+        e.name = name;
+        e.entityType = isCompanyRecord(p, name, owners.length>0) ? 'company' : 'person';
+        e.sourceTag = sourceLabel || 'json';
+        var j = firstDefined(p, ['jurisdiction','country','countryCode','country_code','nationality','incorporationCountry','address.country']);
+        if(j && typeof j==='object') j = j.code || j.iso || j.name || '';
+        e.jurisdiction = j ? String(j) : '';
+        e.regNo = String(firstDefined(p, ['registrationNumber','registration_number','companyNumber','company_number','regNo','reg_no','lei']) || '');
+        e.taxId = String(firstDefined(p, ['taxId','tax_id','tin','vat','vatNumber','afm']) || '');
+        var dob = firstDefined(p, ['dateOfBirth','date_of_birth','dob','birthDate','birth_date']);
+        e.dob = dob ? String(dob).slice(0,10) : '';
+        if(p.verified===true || p.isVerified===true) e.verified = true;
+        else if(p.verified===false || p.isVerified===false) e.verified = false;
+
+        // roles
+        var roleStr = p.role||p.roles||p.roleDescr||p.title||p.position||p.function||p.designation||p.relationType||p.relationship||p.capacity||p.idiotita||'';
+        var roleParts = null;
+        if(Array.isArray(roleStr)){
+          roleParts = roleStr.map(function(r){ return String((r && typeof r==='object') ? (r.descr||r.name||r.description||'') : r).trim(); }).filter(Boolean);
+          roleStr = roleParts.join(', ');
+        }
+        else if(roleStr && typeof roleStr==='object') roleStr = roleStr.descr||roleStr.name||roleStr.description||'';
+        roleStr = String(roleStr).trim();
+        var mapped = [];
+        var unmappedParts = [];
+        if(roleParts){
+          roleParts.forEach(function(part){ var m = mapRole(part); if(m) mapped = mapped.concat(m); else unmappedParts.push(part); });
+        } else mapped = mapRole(roleStr) || [];
+        if(!mapped.length && !roleParts){
+          roleStr.split(/[,;\/]| & | and /i).forEach(function(part){
+            var m = mapRole(part.trim()); if(m) mapped = mapped.concat(m);
+          });
+        }
+        var cat = String(p.category||p.personCategory||p.group||'').toLowerCase().trim();
+        var CATEGORY_ROLE = {'διοικητικό συμβούλιο':'bod','διοικητικο συμβουλιο':'bod','εταίροι':'shareholder','εταιροι':'shareholder',
+          'μέτοχοι':'shareholder','μετοχοι':'shareholder','board of directors':'bod','shareholders':'shareholder','partners':'shareholder'};
+        if(CATEGORY_ROLE[cat] && mapped.indexOf(CATEGORY_ROLE[cat])===-1) mapped.push(CATEGORY_ROLE[cat]);
+        if((p.isRepresentativeAlone===true || p.isRepresentativeInCommon===true) && mapped.indexOf('legalRep')===-1) mapped.push('legalRep');
+        // the list's own meaning applies when the record states no role; being in a
+        // shareholder/UBO list is ownership evidence even if the title is unusual
+        if(defaultRole && (defaultRole==='shareholder' || defaultRole==='ubo' ? mapped.indexOf(defaultRole)===-1 : (!mapped.length && !roleStr))) mapped.push(defaultRole);
+        mapped.forEach(function(r){ if(e.roles[r]!==undefined) e.roles[r] = true; });
+        if(!mapped.length && roleStr){ e.roles.other = true; e.roles.otherText = roleStr; }
+        else if(unmappedParts.length){ e.roles.other = true; e.roles.otherText = unmappedParts.join(', '); }
+        if(p.isRepresentativeInCommon===true && !p.isRepresentativeAlone) e.controlType = e.controlType || 'Represents jointly';
+
+        // ownership
+        var pct = pcts[i];
+        if(defaultRole==='ubo' && depth===0){
+          if(pct!=null && pct>0){ e.uboBasis = 'ownership'; e.uboPct = pct; }
+          pct = null;
+        }
+        // nested records are owners unless their role says otherwise (e.g. a holding's director)
+        var nonOwnerRole = mapped.length && mapped.indexOf('shareholder')===-1 && mapped.indexOf('ubo')===-1;
+        if(pct!=null && pct>0){ e.pct = pct; e.roles.shareholder = true; ctx.withPct++; }
+        if((pct!=null && pct>0) || e.roles.shareholder || (depth>0 && !nonOwnerRole)){
+          e.ownsStakeIn = parentId;
+          if(depth>0 && !mapped.length) e.roles.shareholder = true;
+        }
+        var target = firstDefined(p, TARGET_KEYS);
+        if(target!=null && depth===0){
+          if(typeof target==='object') target = target.id || target.name || target.registrationNumber || null;
+          if(target!=null) ctx.pending.push({ ent:e, ref:String(target).toLowerCase() });
+        }
+        if(e.roles.ubo && e.uboBasis==null){
+          var up = parsePctValue(firstDefined(p, ['ultimatePercentage','ultimate_percentage','uboPercentage','ubo_percentage','indirectPercentage']));
+          if(up!=null && up>0){ e.uboBasis = 'ownership'; e.uboPct = up<=1 && pct!=null && pct>1 ? up*100 : up; }
+          else if(pct!=null && pct>0){ e.uboBasis = 'ownership'; e.uboPct = pct; }
+          else { e.uboBasis = 'control'; e.controlType = String(p.controlType||p.control_type||p.natureOfControl||p.nature_of_control||''); }
+        }
+
+        // One entry per person: records for the same name under the same parent
+        // (e.g. GEMI lists a partner once as manager and once as partner) are
+        // combined. A different tax ID or a different owned entity keeps them apart.
+        var tRef = firstDefined(p, TARGET_KEYS);
+        if(tRef && typeof tRef==='object') tRef = tRef.id || tRef.name || '';
+        var key = parentId + '|' + personKey(name) + '|' + String(tRef||'').toLowerCase();
+        var kept = ctx.byPerson[key];
+        if(kept && kept.taxId && e.taxId && kept.taxId!==e.taxId) kept = null;
+        // both records carry a holding: could be namesakes or two share classes, so keep both and flag it
+        if(kept && kept.pct!=null && e.pct!=null){
+          if(ctx.sameName.indexOf(name)===-1) ctx.sameName.push(name);
+          kept = null;
+        }
+        if(kept){
+          mergeEntityInto(kept, e, ctx);
+          ctx.pending = ctx.pending.filter(function(pr){ return pr.ent!==e || !ctx.pending.some(function(q){ return q.ent===kept; }); });
+          ctx.pending.forEach(function(pr){ if(pr.ent===e) pr.ent = kept; });
+          ctx.merged++;
+        } else {
+          kept = e;
+          ctx.byPerson[key] = e;
+          entities.push(e); ctx.added++; ctx.list.push(e);
+        }
+        ctx.keysById[kept.id] = (ctx.keysById[kept.id] || []).concat(Object.keys(p));
+
+        OWN_ID_KEYS.concat(['registrationNumber','regNo','lei']).forEach(function(k){
+          if(p[k]!=null && p[k]!=='') ctx.byRef[String(p[k]).toLowerCase()] = kept;
+        });
+        if(!ctx.byRef[name.toLowerCase()]) ctx.byRef[name.toLowerCase()] = kept;
+
+        ctx.maxDepth = Math.max(ctx.maxDepth, depth);
+        owners.forEach(function(o){
+          kept.entityType = 'company';
+          importList(o.list, o.role, kept.id, depth+1);
+        });
+      });
+    }
+
+    var seenLists = [];
+    function collect(container){
+      if(!container || typeof container!=='object') return;
+      Object.keys(LIST_KEYS).forEach(function(k){
+        var list = container[k];
+        if(Array.isArray(list) && list.length && typeof list[0]==='object' && seenLists.indexOf(list)===-1){
+          seenLists.push(list);
+          importList(list, LIST_KEYS[k], 'root', 0);
+        }
+      });
+    }
+    (function walk(o, d){
+      if(!o || typeof o!=='object' || Array.isArray(o) || d > 4) return;
+      collect(o);
+      Object.keys(o).forEach(function(k){ if(LIST_KEYS[k]===undefined) walk(o[k], d+1); });
+    })(obj, 0);
+
+    ctx.list.forEach(function(e){
+      if(e.ownsStakeIn!=='none' && e.pct==null){
+        ctx.noPct++;
+        (ctx.keysById[e.id]||[]).forEach(function(k){ if(ctx.noPctKeys.indexOf(k)===-1) ctx.noPctKeys.push(k); });
+      }
+    });
+
+    // resolve flat references ("this record owns a stake in <id or name>")
+    ctx.pending.forEach(function(pr){
+      if(ctx.rootRefs[pr.ref]){ pr.ent.ownsStakeIn = 'root'; return; }
+      var t = ctx.byRef[pr.ref];
+      if(t && t!==pr.ent){
+        pr.ent.ownsStakeIn = t.id;
+        t.entityType = 'company';
+        ctx.maxDepth = Math.max(ctx.maxDepth, 1);
+      }
+    });
+    return ctx;
+  }
+
+  // Before a new import, offer to replace entries the previous JSON import created
+  // (entries edited by hand since then are kept).
+  function clearPreviousJsonImport(){
+    var prev = entities.filter(function(e){ return e.importBatch==='json'; });
+    if(!prev.length) return;
+    if(confirm('Replace the ' + prev.length + ' unedited ' + (prev.length===1?'entry':'entries') + ' from the previous JSON import?\n\nOK replaces them. Cancel keeps them and adds the new ones.')){
+      var ids = {}; prev.forEach(function(e){ ids[e.id] = true; });
+      entities = entities.filter(function(e){ return !ids[e.id]; });
+      entities.forEach(function(e){ if(ids[e.ownsStakeIn]) e.ownsStakeIn = 'none'; });
+    }
+  }
+
+  function importSummary(ctx){
+    if(!ctx.added) return 'no shareholders or stakeholders found';
+    var levels = entities.reduce(function(m, e){ return (e.ownsStakeIn && e.ownsStakeIn!=='none') ? Math.max(m, getLayer(e.id)) : m; }, 0);
+    var msg = ctx.added + ' stakeholder(s) imported, ' + ctx.withPct + ' with a percentage'
+      + (ctx.merged ? ', ' + ctx.merged + ' duplicate record(s) combined into existing entries' : '')
+      + (levels > 1 ? ', ' + levels + ' levels of owners' : '')
+      + (ctx.skipped ? ', ' + ctx.skipped + ' superseded past record(s) skipped' : '');
+    if(ctx.expired.length){
+      msg += '. Term already ended for ' + ctx.expired.length + ' record(s): ' + ctx.expired.slice(0,4).join(', ')
+        + (ctx.expired.length>4 ? '…' : '') + '. Imported anyway; check GEMI for a newer filing';
+    }
+    var byParent = {};
+    ctx.list.forEach(function(e){ if(e.ownsStakeIn && e.ownsStakeIn!=='none' && e.pct!=null) (byParent[e.ownsStakeIn] = byParent[e.ownsStakeIn] || []).push(e.pct); });
+    Object.keys(byParent).forEach(function(k){
+      var v = byParent[k];
+      if(v.length > 1 && v.every(function(x){ return x===100; })){
+        msg += '. Every partner is listed at 100%: in a partnership (e.g. ANS) this usually means full joint liability, not ownership. Enter the actual split from the partnership agreement';
+      }
+    });
+    if(ctx.sameName.length){
+      msg += '. Same name with separate holdings, kept as separate entries: ' + ctx.sameName.slice(0,4).join(', ')
+        + (ctx.sameName.length>4 ? '…' : '') + '; check whether each is one person';
+    }
+    if(ctx.summed.length){
+      msg += '. Two holdings were added together for: ' + ctx.summed.slice(0,4).join(', ') + '; check the split';
+    }
+    if(ctx.noPct){
+      msg += '. ' + ctx.noPct + ' shareholder(s) have no percentage in the file (fields found: '
+        + ctx.noPctKeys.slice(0,12).join(', ') + '). They are linked as "n/a"; fill in their Shareholding % in the entries above';
+    }
+    return msg;
+  }
+
+  // ---------- Generic multi-country parser ----------
+  function parseGenericJSON(obj, sourceLabel){
+    // --- Company profile ---
+    var name = pickField(obj,
+      'registeredCompanyName','registered_company_name','name','companyName','company_name','businessName','business_name','entityName',
+      'legalName','legal_name','fullName','full_name','officialName','official_name',
+      'company.name','entity.name',
+      'denominazione','nombre','nom','firmenname','naam','nome','nombre_empresa'
+    );
+    var tradeName = pickField(obj,
+      'tradingName','tradeName','trade_name','commercialName','commercial_name','trading_name',
+      'dba','alias','shortName','short_name','brandName','brand_name'
+    );
+    var legalForm = pickField(obj,
+      'legalForm','legal_form','companyType','company_type','entityType','entity_type',
+      'type','form','structure','kind',
+      'legalType','legal_type',
+      'forma_juridica','forme_juridique','rechtsform','rechtsvorm','forma_giuridica'
+    );
+    if(legalForm && typeof legalForm==='object'){
+      legalForm = legalForm.descr||legalForm.name||legalForm.description||legalForm.label||null;
+    }
+    var regNo = pickField(obj,
+      'companyRegistrationNumber','registrationNumber','registration_number','companyNumber','company_number',
+      'regNo','reg_no','number','entityNumber','entity_number','identifier','id',
+      'company_id','kvk','siren','siret','orgnr','uin','ico','nip','cin','cif',
+      'company.registrationNumber','entity.registrationNumber','companyCode'
+    );
+    if(Array.isArray(regNo)) regNo = regNo[0] || null;
+    // the display name is a trading name when a registered name is also given
+    if(!tradeName && obj.registeredCompanyName && obj.companyName && obj.companyName!==obj.registeredCompanyName) tradeName = obj.companyName;
+    var taxNo = pickField(obj,
+      'taxNumber','tax_number','taxId','tax_id','vatNumber','vat_number',
+      'vat','tin','ein','nif','steuernummer','btw','cuit','cnpj','rfc',
+      'company.taxId','entity.taxId'
+    );
+    var incDate = pickField(obj,
+      'incorporationDate','incorporation_date','dateOfIncorporation','date_of_incorporation',
+      'foundedDate','founded_date','registrationDate','registration_date',
+      'foundingDate','founding_date','formationDate','formation_date',
+      'startDate','start_date','inceptionDate','inception_date','created','created_at'
+    );
+    if(incDate) incDate = String(incDate).slice(0,10);
+    var country = pickField(obj,
+      'country','countryCode','country_code','jurisdiction','jurisdiction_code',
+      'registeredCountry','registered_country','nationality',
+      'company.country','entity.country','address.country','address.countryCode'
+    );
+    if(country && typeof country==='object'){
+      country = country.code||country.iso||country.alpha2||country.isoCode||country.name||null;
+    }
+    if(country) country = String(country).toUpperCase().slice(0,2);
+    var statusRaw = pickField(obj,
+      'status','companyStatus','company_status','state','currentStatus',
+      'current_status','activityStatus','activity_status','registrationStatus'
+    );
+    if(statusRaw && typeof statusRaw==='object'){
+      statusRaw = statusRaw.descr||statusRaw.name||statusRaw.description||statusRaw.label||null;
+    }
+    var mccVal = pickField(obj,
+      'mcc','merchantCategoryCode','merchant_category_code','sic','nace','naics'
+    );
+    if(mccVal && typeof mccVal==='object') mccVal = mccVal.code||mccVal.value||null;
+
+    // Address
+    var address = null;
+    // address lists: first entry with text, registered before other/trading addresses
+    ['addresses','registeredAddresses','otherAddresses','tradingAddresses'].some(function(k){
+      return (Array.isArray(obj[k]) ? obj[k] : []).some(function(a){
+        var line = a && (a.addressInOneLine || a.fullAddress || a.formattedAddress);
+        if(line && String(line).trim()){ address = String(line).trim(); return true; }
+        return false;
+      });
+    });
+    var addrObj = address ? null : pickField(obj,
+      'address','registeredAddress','registered_address','headquarters',
+      'principal_office','office','registered_office'
+    );
+    if(address){ /* found in an address list */ }
+    else if(addrObj && typeof addrObj==='object'){
+      var ap = [
+        addrObj.street||addrObj.streetAddress||addrObj.street_address||addrObj.addressLine1||addrObj.line1||addrObj.address1,
+        addrObj.streetNumber||addrObj.street_number||addrObj.houseNumber||addrObj.house_number||addrObj.building_number,
+        addrObj.city||addrObj.town||addrObj.locality||addrObj.municipality,
+        addrObj.postalCode||addrObj.postal_code||addrObj.zip||addrObj.zipCode||addrObj.postCode||addrObj.postcode,
+        addrObj.region||addrObj.state||addrObj.county||addrObj.province,
+        addrObj.country||addrObj.countryCode
+      ].filter(Boolean);
+      address = ap.join(', ');
+    } else if(typeof addrObj==='string' && addrObj){
+      address = addrObj;
+    } else {
+      var st = pickField(obj,'street','streetAddress','street_address','address1','addressLine1');
+      var ci = pickField(obj,'city','town','locality');
+      if(ci && typeof ci==='object') ci = ci.descr||ci.name||null;
+      var zp = pickField(obj,'postalCode','postal_code','zip','zipCode','postCode');
+      if(st||ci) address = [st,ci,zp].filter(Boolean).join(', ');
+    }
+
+    // Apply company fields
+    if(name) setPrefilled('cp_name', name);
+    if(tradeName) setPrefilled('cp_tradeName', tradeName);
+    if(legalForm) setPrefilled('cp_legalForm', legalForm);
+    if(regNo) setPrefilled('cp_regNo', String(regNo));
+    if(taxNo) setPrefilled('cp_taxNumber', String(taxNo));
+    if(incDate) setPrefilled('cp_incorporated', incDate);
+    if(country) setPrefilled('cp_country', country);
+    if(address) setPrefilled('cp_address', address);
+    if(mccVal) setPrefilled('cp_mcc', String(mccVal));
+    if(statusRaw) setStatus(statusRaw);
+
+    var ctx = importStakeholders(obj, sourceLabel);
+
+    var cpFields = [name,regNo,taxNo,legalForm,statusRaw,address,country,incDate].filter(Boolean).length;
+    $('jsonStatus').textContent = (sourceLabel||'Generic')+': '+cpFields+' company field(s) mapped, '+importSummary(ctx)+'.'+(linkedEntities().length ? ' Click Generate diagram to draw the structure.' : ' Review and complete manually.');
+    $('jsonUploadBox').classList.add('has-data');
+    renderAll();
+  }
+
+  // Credit-bureau and KYB exports wrap the company several levels deep.
+  // Pick the nested object that looks most like a company profile.
+  var PROFILE_KEYS = ['registeredCompanyName','companyName','legalName','legalForm','companyStatus','companyRegistrationNumber',
+    'registrationNumber','companyNumber','incorporationDate','registrationDate','countryCode','arGemi','coNameEl','afm',
+    'legalEntity','stakeholders','shareholders','shareHolders','persons','directors','directorAndShareDetails','beneficialOwners'];
+  function findProfile(root){
+    var best = root, bestScore = -1, queue = [{o:root, d:0}];
+    while(queue.length){
+      var cur = queue.shift(), o = cur.o;
+      if(!o || typeof o!=='object' || Array.isArray(o)) continue;
+      var score = PROFILE_KEYS.reduce(function(n, k){ var v = o[k]; return n + ((v!=null && v!=='' && !(Array.isArray(v) && !v.length)) ? 1 : 0); }, 0);
+      if(score > bestScore){ best = o; bestScore = score; }
+      if(cur.d < 8) Object.keys(o).forEach(function(k){
+        var v = o[k]; if(v && typeof v==='object' && !Array.isArray(v)) queue.push({o:v, d:cur.d+1});
+      });
+    }
+    return best;
+  }
+
+  function parseCompanyJSON(text){
+    var obj;
+    try { obj = JSON.parse(text); } catch(err){ $('jsonStatus').textContent = 'Could not parse JSON: ' + err.message; return; }
+    clearPreviousJsonImport();
+    rawJsonText = text;
+
+    // A bare array is either a list of stakeholders or a list of company records
+    if(Array.isArray(obj)){
+      var looksLikeStakeholders = obj.length && typeof obj[0]==='object' && obj.some(function(r){
+        return r && (firstDefined(r, PCT_KEYS)!=null || firstDefined(r, SHARE_COUNT_KEYS)!=null || r.role || ownerListsOf(r).length);
+      });
+      obj = looksLikeStakeholders ? { shareholders: obj } : (obj[0] || {});
+    }
+    obj = findProfile(obj);
+
+    // Detect GEMI API format (Greece registry)
+    if(obj.arGemi!==undefined || (obj.afm!==undefined && obj.coNameEl!==undefined)){
+      parseGEMIjson(obj); return;
+    }
+
+    // Fall back to generic multi-country parser
+    parseGenericJSON(obj, 'Generic');
+  }
+  function setPrefilled(id, val){
+    if(val===undefined || val===null || val==='') return;
+    var el = $(id);
+    el.value = val;
+    el.classList.add('prefilled');
+  }
+
+  function parseJsonAndCheck(text){
+    parseCompanyJSON(text);
+    if(!/^Could not parse/.test($('jsonStatus').textContent)) checkOwnershipNotice();
+  }
+  $('parseJsonBtn').addEventListener('click', function(){
+    var pasted = $('jsonPaste').value.trim();
+    if(pasted){ parseJsonAndCheck(pasted); return; }
+    var f = $('jsonFile').files[0];
+    if(!f){ $('jsonStatus').textContent = 'Upload a file or paste JSON text first.'; return; }
+    var reader = new FileReader();
+    reader.onload = function(e){ parseJsonAndCheck(e.target.result); };
+    reader.readAsText(f);
+  });
+
+  // ---------- Analyst notice: ownership not (fully) in the document ----------
+  var OWNERSHIP_SOURCES = {
+    GR: ['Company share register (βιβλίο μετόχων) or list of partners (πίνακας εταίρων), signed by the legal representative',
+         'GEMI filings: articles of association (καταστατικό) and capital-change announcements. Note: GEMI does not publish the shareholders of an ΑΕ',
+         'Central Register of Beneficial Owners (Κεντρικό Μητρώο Πραγματικών Δικαιούχων, ΚΜΠΔ)'],
+    ES: ['Registro Mercantil / BORME: incorporation notice and "socio único" declarations',
+         'Registro de Titularidades Reales (RETIR) or the notaries\' Base de Datos de Titular Real (BDTR)',
+         'Libro registro de socios or the escritura de constitución, provided by the company'],
+    NO: ['Brønnøysundregistrene (brreg.no): participants of an ANS/DA with their shares, officers of an AS',
+         'Register of beneficial owners (Register over reelle rettighetshavere)',
+         'Share register (aksjeeierbok) from the company, or the shareholder register (aksjonærregisteret)'],
+    _:  ['The national company register: incorporation deed, articles and latest capital changes',
+         'The national beneficial ownership (UBO) register',
+         'The company\'s own shareholder register, certified by a director']
+  };
+  function noticeList(list){
+    return list.slice(0, 8).map(function(e){
+      return '<li><strong>'+escapeHtml(e.name||'(unnamed)')+'</strong>: '+escapeHtml(cardSummary(e).replace(/^(Natural person|Legal entity) · /,'') || 'no role')+'</li>';
+    }).join('') + (list.length>8 ? '<li>and '+(list.length-8)+' more</li>' : '');
+  }
+  function checkOwnershipNotice(){
+    var company = $('cp_name').value.trim() || 'this company';
+    var form = $('cp_legalForm').value.trim();
+    var country = ($('cp_country').value.trim() || '').toUpperCase().slice(0,2);
+    var owners = entities.filter(function(e){ return e.roles.shareholder || (e.ownsStakeIn && e.ownsStakeIn!=='none'); });
+    var noPct = owners.filter(function(e){ return e.pct==null; });
+    var allHundred = owners.length > 1 && owners.every(function(e){ return e.pct===100; });
+    var kind = !owners.length ? 'none' : (noPct.length ? 'nopct' : (allHundred ? 'hundred' : null));
+    if(!kind) return;
+
+    var what = escapeHtml(company) + (form || country ? ' (' + escapeHtml([form, country].filter(Boolean).join(', ')) + ')' : '');
+    var others = entities.filter(function(e){ return owners.indexOf(e)===-1; });
+    var title, lead, found = '', extra = '';
+    if(kind==='none'){
+      title = 'No shareholders found in this document';
+      lead = 'The imported data for ' + what + ' does not list any shareholders or owners. The ownership structure and the UBOs have to be confirmed from another source before this KYC file can be completed.';
+      if(others.length) found = '<div class="notice-box">Imported with other roles only:<ul class="notice-list">' + noticeList(others) + '</ul></div>';
+    } else if(kind==='nopct'){
+      title = 'Shareholding percentages missing';
+      lead = noPct.length + ' shareholder' + (noPct.length===1?' was':'s were') + ' found for ' + what + ', but the document does not state '
+        + (noPct.length===1?'their':'the') + ' percentage. Confirm the split before determining the UBOs.';
+      found = '<div class="notice-box">Shareholders without a percentage:<ul class="notice-list">' + noticeList(noPct) + '</ul></div>';
+    } else {
+      title = 'Partners listed at 100% each';
+      lead = 'Every partner of ' + what + ' is shown at 100%. In a partnership (e.g. ANS, OE) this usually reflects full joint liability, not ownership. Confirm the actual split from the partnership agreement.';
+      found = '<div class="notice-box">Partners:<ul class="notice-list">' + noticeList(owners) + '</ul></div>';
+    }
+    if(country==='ES' && /profesional|professional|\bslp\b/i.test(form + ' ' + company)){
+      extra = '<div class="notice-box warn">Sociedad profesional: professional partners must hold at least 75% of the capital and voting rights (Ley 2/2007). The partners are listed in the Registro de Sociedades Profesionales of the professional association.</div>';
+    }
+    var src = (OWNERSHIP_SOURCES[country] || OWNERSHIP_SOURCES._).concat(['A signed customer declaration of ownership (tick "Customer declaration" as the source)']);
+
+    $('noticeTitle').textContent = title;
+    $('noticeLead').innerHTML = lead;
+    $('noticeFound').innerHTML = found;
+    $('noticeExtra').innerHTML = extra;
+    $('noticeSources').innerHTML = src.map(function(t){ return '<li>'+escapeHtml(t)+'</li>'; }).join('');
+    $('noticeAddBtn').textContent = kind==='none' ? 'Add shareholder manually' : 'Review entries';
+    var dlg = $('ownershipNotice');
+    dlg.returnValue = '';
+    if(typeof dlg.showModal==='function'){ if(!dlg.open) dlg.showModal(); }
+    else alert(title + '\n\n' + lead.replace(/<[^>]+>/g,''));
+    dlg.dataset.kind = kind;
+  }
+  $('ownershipNotice').addEventListener('close', function(){
+    var dlg = this;
+    if(dlg.returnValue!=='add') return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(dlg.dataset.kind==='none' || !entities.length){
+      resetEntityForm();
+      $('roleShareholder').checked = true;
+      syncRoleFieldVisibility();
+      $('entOwns').value = 'root';
+      $('entityForm').scrollIntoView({block:'start', behavior: reduce ? 'auto' : 'smooth'});
+      $('entName').focus({preventScroll:true});
+    } else {
+      var first = entities.find(function(e){ return (e.roles.shareholder || (e.ownsStakeIn && e.ownsStakeIn!=='none')) && (e.pct==null || e.pct===100); }) || entities[0];
+      focusCard(first.id);
+    }
+  });
+
+  // ---------- Report import (markdown) ----------
+  function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function escapeAttr(s){ return escapeHtml(s); }
+
+  // Red-flag lists come as "1. **CODE** — text", "- CODE: text", "CODE — text", ...
+  // Each list item or code line starts a flag; other lines continue the previous one.
+  var RF_CODE = /^([A-Z][A-Za-z0-9]*(?:[_.][A-Za-z0-9]+)+|[A-Z][A-Z0-9]{2,})$/;
+  function parseRedFlagItems(block){
+    var items = [];
+    String(block||'').split('\n').forEach(function(raw){
+      var line = raw.trim();
+      if(!line || /^no red flags/i.test(line)) return;
+      var isItem = /^(?:\d+[.)]|[-*•])\s+/.test(line);
+      line = line.replace(/^(?:\d+[.)]|[-*•])\s+/, '');
+      var code = '', m = line.match(/^\*\*([^*]+?)\*\*\s*(?:[—–:-]\s*)?/) || line.match(/^`([^`]+)`\s*(?:[—–:-]\s*)?/) || line.match(/^(\S+)\s*[—–:]\s*/) || line.match(/^(\S+)\s+-\s+/);
+      if(m && RF_CODE.test(m[1].trim())){ code = m[1].trim(); line = line.slice(m[0].length); isItem = true; }
+      line = line.replace(/\*\*/g, '')
+        // drop empty evidence stubs, keep ones that cite a document
+        .replace(/\s*\(docRef:\s*(?:&nbsp;|\s)*,\s*page:\s*(?:null|&nbsp;|\s)*,\s*quote:\s*(?:&nbsp;|\s)*\)/gi, '')
+        .replace(/\(docRef:\s*(?:&nbsp;|\s)*,\s*page:\s*(?:null|&nbsp;|\s)*,\s*quote:/gi, '(quote:')
+        .replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+      if(isItem || !items.length) items.push({code: code, desc: line});
+      else items[items.length-1].desc += (items[items.length-1].desc ? ' ' : '') + line;
+    });
+    return items.filter(function(f){ return f.code || f.desc; });
+  }
+
+  var reportInfo = { invalid:false, outcome:'' };
+  // "Outcome string (per Decision Matrix §7): INVALID_7.2a. ESCALATE_FOR_INVESTIGATION; Outcome code: INVALID_7.2a"
+  function reportOutcome(text){
+    var m = text.match(/Outcome (?:string|code)[^:\n]*:\s*\**\s*([^\n]+)/i);
+    if(m){
+      var o = m[1].replace(/\*\*/g,'').split(';')[0].trim();
+      return o.replace(/^(\S+?)\.\s+/, '$1 · ');
+    }
+    m = text.match(/\bINVALID_\d+(?:\.\d+)?[a-z]?(?![\w]|\.\w)/);
+    return m ? m[0] : '';
+  }
+
+  var RFS_STATE = {'':['open','Open'], 'Resolved':['resolved','Resolved'], 'False Red Flag':['false','False flag'], 'Cannot Be Resolved':['blocked','Cannot be resolved']};
+  function renderRfSummary(){
+    var box = $('rfSummary');
+    if(!reportInfo) return;              // first render runs before the report state exists
+    var show = reportInfo.invalid && (redFlags.length || reportInfo.outcome);
+    box.classList.toggle('hidden', !show);
+    if(!show) return;
+    var open = redFlags.filter(function(r){ return !r.decision; }).length;
+    $('rfSummaryTitle').textContent = 'Invalid report · ' + redFlags.length + ' red flag' + (redFlags.length===1?'':'s')
+      + (redFlags.length ? ' · ' + (open ? open + ' open' : 'all reviewed') : '');
+    $('rfsOutcome').textContent = reportInfo.outcome ? 'Outcome: ' + reportInfo.outcome : '';
+    $('rfsList').innerHTML = redFlags.map(function(r, i){
+      var st = RFS_STATE[r.decision||''] || RFS_STATE[''];
+      var desc = (r.desc||'').replace(/\s*\((?:docRef|quote):[\s\S]*$/,'');
+      return '<li><button type="button" class="rfs-code" data-rf="'+r.id+'" title="Open red flag #'+(i+1)+'">'+escapeHtml(r.code || 'Red flag #'+(i+1))+'</button>'
+        + '<span class="rfs-state '+st[0]+'">'+st[1]+'</span>'
+        + (desc ? '<span class="rfs-desc" title="'+escapeAttr(desc)+'">'+escapeHtml(desc)+'</span>' : '') + '</li>';
+    }).join('');
+    $('rfsCopyBtn').disabled = !redFlags.some(function(r){ return r.code; });
+  }
+  $('rfsList').addEventListener('click', function(ev){
+    var btn = ev.target.closest('[data-rf]'); if(!btn) return;
+    if(scenario!=='2') document.querySelector('#scenarioToggle button[data-s="2"]').click();
+    var block = document.querySelector('.rf-block[data-id="'+btn.getAttribute('data-rf')+'"]'); if(!block) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    block.scrollIntoView({block:'center', behavior: reduce ? 'auto' : 'smooth'});
+    block.classList.remove('ec-flash'); void block.offsetWidth; block.classList.add('ec-flash');
+    (block.querySelector('.dec[aria-pressed="true"]') || block.querySelector('.dec')).focus({preventScroll:true});
+  });
+  $('rfsCopyBtn').addEventListener('click', function(){
+    var codes = redFlags.map(function(r){ return r.code; }).filter(Boolean).join('; ');
+    var btn = this;
+    function done(){ clearTimeout(btn._t); btn.textContent = 'Copied'; btn._t = setTimeout(function(){ btn.textContent = 'Copy codes'; }, 1600); }
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(codes).then(done, function(){ fallbackCopy(codes); done(); });
+    else { fallbackCopy(codes); done(); }
+  });
+  function fallbackCopy(t){
+    var ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(e){} ta.remove();
+  }
+
+  function parseReportMarkdown(text){
+    rawReportText = text;
+    var titleMatch = text.match(/^#+\s*(.+)$/m);
+    var title = titleMatch ? titleMatch[1] : '';
+    var isPreliminary = /preliminary/i.test(title) || /outcome[\s\S]{0,40}invalid/i.test(text) || /\bINVALID/.test(text);
+    reportInfo = { invalid: isPreliminary, outcome: isPreliminary ? reportOutcome(text) : '' };
+    if(isPreliminary && scenario!=='2'){
+      showScenarioSuggestion('2', 'This looks like an INVALID / Preliminary report — Case 2 is the likely fit.');
+    } else if(!isPreliminary && /legalization proof/i.test(title) && scenario!=='1'){
+      showScenarioSuggestion('1', 'This looks like a valid Legalization Proof — Case 1 is the likely fit.');
+    }
+
+    var fieldMap = {'company name':'cp_name','trade name':'cp_tradeName','legal form':'cp_legalForm','registration number':'cp_regNo','tax number':'cp_taxNumber','date of incorporation':'cp_incorporated','registered address':'cp_address','country':'cp_country','company status':'cp_status','mcc':'cp_mcc'};
+
+    function normalizeDate(val){
+      if(/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+      var m = val.match(/^(\d{1,2})[\/\.-](\d{1,2})[\/\.-](\d{4})$/);
+      if(m) return m[3]+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[1]).padStart(2,'0');
+      var months = {january:'01',february:'02',march:'03',april:'04',may:'05',june:'06',july:'07',august:'08',september:'09',october:'10',november:'11',december:'12'};
+      m = val.toLowerCase().match(/^([a-z]+)\s+(\d{1,2}),?\s+(\d{4})$/);
+      if(m && months[m[1]]) return m[3]+'-'+months[m[1]]+'-'+String(m[2]).padStart(2,'0');
+      return val;
+    }
+
+    function parseCpTable(lines){
+      var seenSeparator = false;
+      var found = 0;
+      for(var i=0; i<lines.length; i++){
+        var trimmed = lines[i].trim();
+        if(!trimmed || !trimmed.startsWith('|')){ if(seenSeparator && found) break; continue; }
+        if(/^\|[\s|:=-]+\|?\s*$/.test(trimmed)){ seenSeparator = true; continue; }
+        if(!seenSeparator) continue; // header row — skip
+        var cells = trimmed.replace(/^\||\|?\s*$/g,'').split('|').map(function(c){ return c.trim().replace(/\*+/g,''); });
+        if(cells.length < 2) continue;
+        var field = cells[0].toLowerCase();
+        var val = cells[1].replace(/&nbsp;/g,'').trim();
+        if(!val || val==='-' || val==='—' || val.toLowerCase()==='n/a') continue;
+        Object.keys(fieldMap).forEach(function(k){
+          if(field.indexOf(k)!==-1){
+            var v = val;
+            var targetId = fieldMap[k];
+            if(targetId==='cp_incorporated'){ v = normalizeDate(v); }
+            if(targetId==='cp_status'){
+              var statusMap={'ενεργή':'Active','ενεργος':'Active','ενεργός':'Active','active':'Active','υπό εκκαθάριση':'In liquidation','σε εκκαθάριση':'In liquidation','in liquidation':'In liquidation','διαλύθηκε':'Dissolved','λυθείσα':'Dissolved','dissolved':'Dissolved'};
+              var sel = $(targetId), lower = v.toLowerCase();
+              var mapped = statusMap[lower] || null;
+              if(mapped){ sel.value=mapped; sel.classList.add('prefilled'); found++; return; }
+              for(var oi=0; oi<sel.options.length; oi++){
+                if(sel.options[oi].text.toLowerCase()===lower){ sel.value=sel.options[oi].value; sel.classList.add('prefilled'); found++; return; }
+              }
+            }
+            setPrefilled(targetId, v);
+            found++;
+          }
+        });
+      }
+      return found;
+    }
+
+    // Strategy 1: find Company Profile section then parse tables within it
+    var allLines = text.split('\n');
+    var cpStart = -1, cpEnd = allLines.length;
+    for(var li=0; li<allLines.length; li++){
+      if(/company profile/i.test(allLines[li])){ cpStart = li+1; }
+      else if(cpStart>-1 && /^\s*#{1,4}\s/.test(allLines[li]) && li>cpStart){ cpEnd = li; break; }
+    }
+    var found = 0;
+    if(cpStart > -1){ found = parseCpTable(allLines.slice(cpStart, cpEnd)); }
+    // Strategy 2: scan all tables in the whole document
+    if(!found){ parseCpTable(allLines); }
+
+    var rfSection = text.match(/#+\s*(?:\d+\.?\s*)?Red Flags[^\n]*\n([\s\S]*?)(?:\n---|\n#+\s*\d+\.?\s|$)/i);
+    var flagsAdded = 0;
+    if(rfSection){
+      // a re-parse replaces the flags the previous parse extracted
+      redFlags = redFlags.filter(function(r){ return !r.fromReport; });
+      parseRedFlagItems(rfSection[1]).forEach(function(f){
+        addRedFlagBlock({code: f.code, desc: f.desc, fromReport: true});
+        flagsAdded++;
+      });
+      renderRedFlags();
+    }
+    // no red-flag section: use the report's canonical reason keys, if listed
+    if(!flagsAdded){
+      var keys = text.match(/Canonical Reason Keys[^\n]*\n+\s*([^\n]+)/i);
+      if(keys){
+        redFlags = redFlags.filter(function(r){ return !r.fromReport; });
+        keys[1].split(/[;,]/).map(function(k){ return k.replace(/[*`]/g,'').trim(); }).filter(function(k){ return RF_CODE.test(k); })
+          .forEach(function(k){ addRedFlagBlock({code:k, desc:'', fromReport:true}); flagsAdded++; });
+      }
+    }
+    renderRfSummary();
+
+    var refCount = 0;
+    ['4\\.1','4\\.2','4\\.3','4\\.4'].forEach(function(actPat, idx){
+      var key = ['41','42','43','44'][idx];
+      var re = new RegExp('#+\\s*'+actPat+'[^\\n]*\\n([\\s\\S]*?)(?=\\n#+\\s*4\\.[1-4]|\\n---\\s*\\n\\s*#+\\s*5\\.|\\n#+\\s*5\\.)', 'i');
+      var m = text.match(re);
+      if(m){ actReference[key] = m[1].trim(); refCount++; }
+    });
+    renderActReferences();
+
+    $('reportStatus').textContent = 'Parsed: company profile fields prefilled where found, ' + flagsAdded + ' red flag(s) extracted, ' + refCount + ' act reference block(s) captured. Full original text kept verbatim for export.';
+    $('reportUploadBox').classList.add('has-data');
+    renderAll();
+  }
+
+  function renderActReferences(){
+    Object.keys(actReference).forEach(function(act){
+      var target = document.querySelector('.act-block h4');
+    });
+    var wrap = $('c2ActsWrap');
+    Object.keys(actReference).forEach(function(act){
+      var block = wrap.querySelector('[data-k="c2_'+act+'_notes"]');
+      if(block && !block.value){
+        block.placeholder = 'Current on file: ' + actReference[act].slice(0,180) + (actReference[act].length>180?'…':'');
+      }
+    });
+  }
+
+  $('parseReportBtn').addEventListener('click', function(){
+    var pasted = $('reportPaste').value.trim();
+    if(pasted){ parseReportMarkdown(pasted); return; }
+    var f = $('reportFile').files[0];
+    if(!f){ $('reportStatus').textContent = 'Upload a file or paste report text first.'; return; }
+    var reader = new FileReader();
+    reader.onload = function(e){ parseReportMarkdown(e.target.result); };
+    reader.readAsText(f);
+  });
+
+  $('clearReportBtn').addEventListener('click', function(){
+    var cpFields = ['cp_name','cp_tradeName','cp_legalForm','cp_regNo','cp_taxNumber','cp_incorporated','cp_address','cp_country','cp_mcc'];
+    cpFields.forEach(function(id){ var el=$(id); el.value=''; el.classList.remove('prefilled'); });
+    var sel=$('cp_status'); sel.value=sel.options[0].value; sel.classList.remove('prefilled');
+    $('reportPaste').value=''; $('reportFile').value='';
+    $('reportStatus').textContent=''; rawReportText='';
+    redFlags = redFlags.filter(function(r){ return !r.fromReport; });
+    reportInfo = { invalid:false, outcome:'' };
+    renderRedFlags();
+    var box=$('reportUploadBox'); box.classList.remove('has-data');
+  });
+
+  // ---------- export builder ----------
+  function tableRow(label, val){ return '| '+label+' | '+(val && val.trim() ? val : 'Not provided')+' |'; }
+
+  function buildExport(){
+    var L = [];
+    var hr = '---';
+    function sec(){ L.push(hr); L.push(''); }
+    function row(k,v){ return '| '+k+' | '+(v||'—')+' |'; }
+
+    // Generate document reference
+    var now = new Date();
+    var ymd = now.getFullYear().toString() +
+      String(now.getMonth()+1).padStart(2,'0') +
+      String(now.getDate()).padStart(2,'0');
+    var rand = Math.random().toString(36).toUpperCase().slice(2,6);
+    var docRef = 'KYC-' + ymd + '-' + rand;
+
+    var caseLabel = scenario==='1' ? 'Case 1 — Legalization Proof (Valid)'
+                  : scenario==='2' ? 'Case 2 — Preliminary / Invalid Report Review'
+                  : 'Case 3 — Legalization Report From Scratch';
+
+    var invName = getK('inv_name') || 'Not specified';
+    var invDate = getK('inv_date') || new Date().toISOString().slice(0,10);
+    var cpName  = $('cp_name').value || 'Not specified';
+
+    // ── DOCUMENT HEADER ──────────────────────────────────────────
+    L.push(hr);
+    L.push('');
+    L.push('# ' + REPORT_NAME);
+    L.push('');
+    L.push('| | |');
+    L.push('|:---|:---|');
+    L.push('| **Classification** | CONFIDENTIAL — INTERNAL USE ONLY |');
+    L.push('| **Document Reference** | ' + docRef + ' |');
+    L.push('| **Date of Issue** | ' + invDate + ' |');
+    L.push('| **Case Type** | ' + caseLabel + ' |');
+    L.push('| **Entity Under Review** | ' + cpName + ' |');
+    L.push('| **Reviewed by** | ' + invName + ' |');
+    L.push('');
+
+    // ── SECTION 1: ENTITY IDENTIFICATION ─────────────────────────
+    sec();
+    L.push('## 1. ENTITY IDENTIFICATION');
+    L.push('');
+    L.push('| Field | Value |');
+    L.push('|:---|:---|');
+    L.push(row('Legal Name',           $('cp_name').value));
+    L.push(row('Trade Name',           $('cp_tradeName').value));
+    L.push(row('Legal Form',           $('cp_legalForm').value));
+    L.push(row('Registration Number',  $('cp_regNo').value));
+    L.push(row('Tax Identification No.', $('cp_taxNumber').value));
+    L.push(row('Date of Incorporation',$('cp_incorporated').value));
+    L.push(row('Registered Address',   $('cp_address').value));
+    L.push(row('Country',              $('cp_country').value));
+    L.push(row('Company Status',       $('cp_status').value));
+    L.push(row('MCC',                  $('cp_mcc').value));
+    L.push('');
+
+    // ── SECTION 2: OWNERSHIP STRUCTURE & AUTHORIZED REPRESENTATIVES
+    sec();
+    L.push('## 2. OWNERSHIP STRUCTURE & AUTHORIZED REPRESENTATIVES');
+    L.push('');
+    L.push('> Ownership diagram exported separately (ownership-diagram.svg / .png).');
+    L.push('');
+    L.push('| Name | Entity Type | Roles | Ownership Link | Stake % | UBO Basis | UBO Detail | Identity Verified | Source |');
+    L.push('|:---|:---|:---|:---|---:|:---|:---|:---|:---|');
+    entities.forEach(function(e){
+      var badge = badgeFor(e);
+      var tags  = tagsFor(e);
+      var rolesParts = badge ? [badge.text] : [];
+      rolesParts = rolesParts.concat(tags);
+      var rolesStr  = rolesParts.join('; ') || '—';
+      var linkStr   = (e.ownsStakeIn && e.ownsStakeIn!=='none') ? ownerName(e.ownsStakeIn) : '—';
+      var pctStr    = e.pct==null ? '—' : e.pct+'%';
+      var uboBStr   = e.uboBasis || '—';
+      var uboDStr   = e.roles.ubo ? (e.uboBasis==='ownership' ? (e.uboPct==null?'—':e.uboPct+'%') : (e.controlType||'—')) : '—';
+      var verStr    = e.verified===true ? '✓ Yes' : (e.verified===false ? '✗ No' : 'Pending');
+      var srcStr    = (e.sources||[]).join(', ') || '—';
+      L.push('| '+(e.name||'(unnamed)')+' | '+(e.entityType==='company'?'Legal Entity':'Natural Person')+
+             ' | '+rolesStr+' | '+linkStr+' | '+pctStr+' | '+uboBStr+' | '+uboDStr+' | '+verStr+' | '+srcStr+' |');
+    });
+    L.push('');
+
+    // ── SECTION 3: CASE-SPECIFIC FINDINGS ────────────────────────
+    if(scenario==='1'){
+      sec();
+      L.push('## 3. CASE NOTES — VALID LEGALIZATION PROOF');
+      L.push('');
+      L.push('The uploaded/pasted report has been reviewed and accepted as a valid legalization proof. '
+           + 'Company profile and shareholding structure are recorded above as extracted from the report.');
+      L.push('');
+    }
+
+    if(scenario==='2'){
+      sec();
+      L.push('## 3. CASE FINDINGS — PRELIMINARY / INVALID REPORT REVIEW');
+      L.push('');
+      L.push('### 3.1 Red Flags — Investigator Resolution');
+      L.push('');
+      if(!redFlags.length){
+        L.push('*No red flags recorded.*');
+      } else {
+        L.push('| # | Code / ID | Description | Decision | Notes |');
+        L.push('|---:|:---|:---|:---|:---|');
+        redFlags.forEach(function(rf, i){
+          L.push('| '+(i+1)+' | '+(rf.code||'—')+' | '+(rf.desc||'—')+' | '+(rf.decision||'—')+' | '+(rf.notes||'—')+' |');
+        });
+      }
+      L.push('');
+      L.push('### 3.2 Representation Review Gate');
+      L.push('');
+      L.push('**All acts correct as-is:** ' + (getK('c2_gate_allacts')||'Not specified'));
+      if(getK('c2_gate_allacts')==='NO'){
+        Object.keys(ACT_NAMES).forEach(function(act){
+          L.push('');
+          L.push('#### ' + ACT_NAMES[act]);
+          L.push('');
+          L.push('| Field | Value |');
+          L.push('|:---|:---|');
+          L.push(row('Authorized person(s)',  getK('c2_'+act+'_auth')));
+          L.push(row('Representation mode',   getK('c2_'+act+'_mode')));
+          L.push(row('Limits / thresholds',   getK('c2_'+act+'_limits')||'None'));
+          L.push(row('Notes / evidence',      getK('c2_'+act+'_notes')));
+        });
+      }
+      L.push('');
+      L.push('### 3.3 Expiration');
+      L.push('');
+      L.push('**Representation remains correct:** ' + (getK('c2_expiration_ok')||'Not specified'));
+      if(getK('c2_expiration_ok')==='YES') L.push('**Confirmed valid until:** ' + (getK('c2_expiration_date')||'Not provided'));
+      L.push('');
+      L.push('### 3.4 Final Outcome');
+      L.push('');
+      L.push('**Result:** ' + (getK('c2_final_result')||'Not specified'));
+      L.push('**Outstanding material risks:** ' + (getK('c2_outstanding_risks')||'None'));
+      L.push('');
+    }
+
+    if(scenario==='3'){
+      sec();
+      L.push('## 3. CASE FINDINGS — LEGALIZATION REPORT FROM SCRATCH');
+      L.push('');
+      L.push('**Matrix documents reviewed:** ' + (getK('c3_matrix')||'Not specified'));
+      L.push('');
+      Object.keys(ACT_NAMES).forEach(function(act, idx){
+        L.push('### 3.'+(idx+1)+' ' + ACT_NAMES[act]);
+        L.push('');
+        L.push('| Field | Value |');
+        L.push('|:---|:---|');
+        L.push(row('Clause Extract / Statutory Rule', getK('c3_'+act+'_clause')));
+        L.push(row('Description',                     getK('c3_'+act+'_desc')));
+        L.push(row('Representation Mode',             getK('c3_'+act+'_mode')));
+        L.push(row('Mode Parameters',                 getK('c3_'+act+'_params')||'N/A'));
+        L.push(row('Authorized Signers',              getK('c3_'+act+'_signers')));
+        L.push(row('Monetary Limits / Thresholds',    getK('c3_'+act+'_limits')||'None'));
+        L.push(row('Other Restrictions / Conditions', getK('c3_'+act+'_restrictions')||'None'));
+        L.push('');
+      });
+      L.push('### 3.5 Expiration');
+      L.push('');
+      L.push('**Mode:** ' + (getK('c3_expiration_mode')||'Not specified'));
+      if(getK('c3_expiration_mode')==='Yes') L.push('**Report Valid Until:** ' + (getK('c3_expiration_date')||'Not provided'));
+      L.push('');
+      L.push('### 3.6 Red Flags Gate');
+      L.push('');
+      L.push('**Any red flags identified:** ' + (getK('c3_redflags_gate')||'Not specified'));
+      L.push('');
+      L.push('### 3.7 Compliance Checklist');
+      L.push('');
+      L.push('| # | Item | Status |');
+      L.push('|---:|:---|:---|');
+      C3_CHECKLIST.forEach(function(item, i){
+        L.push('| '+(i+1)+' | '+item+' | '+(getK('c3_check_'+i)||'Not specified')+' |');
+      });
+      L.push('');
+      L.push('**Final confirmation:** ' + (getK('c3_final_confirm')||'Not specified'));
+      L.push('');
+    }
+
+    // ── SECTION 4: INVESTIGATOR SIGN-OFF ─────────────────────────
+    sec();
+    L.push('## 4. INVESTIGATOR SIGN-OFF');
+    L.push('');
+    L.push('| Field | Value |');
+    L.push('|:---|:---|');
+    L.push(row('Reviewed by',     invName));
+    L.push(row('Date',            invDate));
+    L.push(row('Document Reference', docRef));
+    L.push(row('Case Type',       caseLabel));
+    L.push('');
+    L.push('*I confirm that the information recorded in this document has been reviewed '
+         + 'for accuracy and completeness to the best of my knowledge.*');
+    L.push('');
+    L.push('**Signature:** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+    L.push('');
+
+    // ── ANNEX A: ORIGINAL REPORT ──────────────────────────────────
+    if(rawReportText){
+      sec();
+      L.push('## ANNEX A — ORIGINAL REPORT (verbatim, as submitted)');
+      L.push('');
+      L.push('```markdown');
+      L.push(rawReportText);
+      L.push('```');
+      L.push('');
+    }
+
+    // ── FOOTER ────────────────────────────────────────────────────
+    sec();
+    L.push('*CONFIDENTIAL | For internal compliance use only. Unauthorised disclosure is prohibited.*  ');
+    L.push('*Document Reference: ' + docRef + ' | Generated by KYC & Legalization Intake Tool*');
+
+    return L.join('\n');
+  }
+
+  // ── Completeness validator ──────────────────────────────────
+  function validateExport(){
+    var missing = [];
+    if(!$('cp_name').value.trim())    missing.push('Company Name');
+    if(!$('cp_legalForm').value.trim()) missing.push('Legal Form');
+    if(!$('cp_regNo').value.trim())   missing.push('Registration Number');
+    if(!$('cp_country').value.trim()) missing.push('Country');
+    if(!getK('inv_name'))             missing.push('Investigator Name');
+    if(!getK('inv_date'))             missing.push('Investigator Date');
+    if(!entities.length)              missing.push('At least one entity in shareholding structure');
+    return missing;
+  }
+  function showValidation(missing){
+    var b = $('validationBanner');
+    if(!missing.length){ b.classList.add('hidden'); return; }
+    b.innerHTML = '<strong>Missing required fields</strong><ul>'
+      + missing.map(function(m){ return '<li>'+m+'</li>'; }).join('')
+      + '</ul><small>You can still build the export, but review these before submitting.</small>';
+    b.classList.remove('hidden');
+  }
+
+  // ── Export button handlers ──────────────────────────────────
+  $('buildExportBtn').addEventListener('click', function(){
+    var missing = validateExport();
+    showValidation(missing);
+    var md = buildExport();
+    var ta = $('exportPreview'); ta.value = md; ta.select();
+  });
+  $('copyExportBtn').addEventListener('click', function(){
+    var missing = validateExport();
+    showValidation(missing);
+    var md = buildExport();
+    var ta = $('exportPreview'); ta.value = md; ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch(e){}
+    var btn = this;
+    function flash(){
+      clearTimeout(btn._t);
+      btn.textContent = 'Copied';
+      btn._t = setTimeout(function(){ btn.textContent = 'Copy .md'; }, 1600);
+    }
+    if(!ok && navigator.clipboard){ navigator.clipboard.writeText(md).then(flash); return; }
+    if(ok) flash();
+  });
+  $('downloadExportBtn').addEventListener('click', function(){
+    var missing = validateExport();
+    showValidation(missing);
+    var md = buildExport();
+    var ta = $('exportPreview'); ta.value = md; ta.select();
+    downloadBlob(new Blob([md], {type:'text/markdown;charset=utf-8'}), reportFileName() + '.md');
+  });
+
+  // ── Print / PDF ─────────────────────────────────────────────
+  var REPORT_NAME = 'KYC - Legalization Report';
+  // file name (and PDF "Save as" name): the report name plus the company, so saved reports don't overwrite each other
+  // Greek to Latin for file names only (browsers and shared drives handle ASCII names reliably)
+  var GR_LAT = {'α':'a','β':'v','γ':'g','δ':'d','ε':'e','ζ':'z','η':'i','θ':'th','ι':'i','κ':'k','λ':'l','μ':'m','ν':'n','ξ':'x',
+    'ο':'o','π':'p','ρ':'r','σ':'s','ς':'s','τ':'t','υ':'y','φ':'f','χ':'ch','ψ':'ps','ω':'o'};
+  function asciiName(str){
+    return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[α-ως]/gi, function(ch){
+      var lat = GR_LAT[ch.toLowerCase()] || '';
+      return ch === ch.toLowerCase() ? lat : lat.charAt(0).toUpperCase() + lat.slice(1).toUpperCase();
+    }).replace(/[øØæÆßłŁđĐœŒþÞ]/g, function(ch){
+      return {'ø':'o','Ø':'O','æ':'ae','Æ':'AE','ß':'ss','ł':'l','Ł':'L','đ':'d','Đ':'D','œ':'oe','Œ':'OE','þ':'th','Þ':'TH'}[ch];
+    }).replace(/[^\x20-\x7E]/g, '');
+  }
+  function reportFileName(){
+    var co = asciiName($('cp_name').value.trim()).replace(/[\\\/:*?"<>|&]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80).trim().replace(/[.\s]+$/, '');
+    return REPORT_NAME + (co ? ' - ' + co : '');
+  }
+  function toolVersion(){
+    var m = document.querySelector('meta[name="version"]');
+    return m ? String(m.getAttribute('content')).split(' ')[0] : '';
+  }
+  function printedAt(){
+    var d = new Date(), z = function(n){ return (n<10?'0':'') + n; };
+    return d.getFullYear() + '-' + z(d.getMonth()+1) + '-' + z(d.getDate()) + ' ' + z(d.getHours()) + ':' + z(d.getMinutes());
+  }
+  function mdInline(s){
+    // decode first so already-escaped text isn't double-escaped, then escape everything:
+    // names and clauses from documents must never become live HTML in the print window
+    var plain = String(s||'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,'&');
+    return escapeHtml(plain)
+      .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g,'<em>$1</em>')
+      .replace(/`(.+?)`/g,'<code>$1</code>');
+  }
+  function mdToHtml(md){
+    var lines = md.split('\n'), out='', tableRows=[], inCode=false, inPre=false;
+    function flushTable(){
+      if(!tableRows.length) return;
+      out += '<table>';
+      tableRows.forEach(function(row,ri){
+        out += '<tr>';
+        row.forEach(function(c){
+          out += ri===0 ? '<th>'+mdInline(c)+'</th>' : '<td>'+mdInline(c)+'</td>';
+        });
+        out += '</tr>';
+      });
+      out += '</table>';
+      tableRows = [];
+    }
+    lines.forEach(function(line){
+      if(line.startsWith('```')){
+        if(!inCode){ inCode=true; out+='<pre><code>'; }
+        else { inCode=false; out+='</code></pre>'; }
+        return;
+      }
+      if(inCode){ out += escapeHtml(line)+'\n'; return; }
+      if(line.startsWith('|')){
+        if(line.match(/^\|[\s\-:|]+\|/)) return; // separator
+        var cells = line.split('|').slice(1,-1).map(function(c){ return c.trim(); });
+        tableRows.push(cells); return;
+      }
+      flushTable();
+      if(line.match(/^---+$/)){  out += '<hr>'; return; }
+      if(line.startsWith('#### ')){ out+='<h4>'+mdInline(line.slice(5))+'</h4>'; return; }
+      if(line.startsWith('### ')){ out+='<h3>'+mdInline(line.slice(4))+'</h3>'; return; }
+      if(line.startsWith('## ')){ out+='<h2>'+mdInline(line.slice(3))+'</h2>'; return; }
+      if(line.startsWith('# ')){ out+='<h1>'+mdInline(line.slice(2))+'</h1>'; return; }
+      if(line.startsWith('> ')){ out+='<blockquote>'+mdInline(line.slice(2))+'</blockquote>'; return; }
+      if(line.match(/^[-*] /)){ out+='<li>'+mdInline(line.slice(2))+'</li>'; return; }
+      if(!line.trim()){ out+='<p></p>'; return; }
+      out += '<p>'+mdInline(line)+'</p>';
+    });
+    flushTable();
+    return out;
+  }
+
+  $('printExportBtn').addEventListener('click', function(){
+    var missing = validateExport();
+    showValidation(missing);
+    var md = buildExport();
+    $('exportPreview').value = md;
+    var bodyHtml = mdToHtml(md);
+    // Grab diagram SVG, drawing it first if there is a structure to show
+    if(!document.getElementById('ownershipSvg') && linkedEntities().length) generateDiagram();
+    var svgEl = document.getElementById('ownershipSvg');
+    var diagramHtml = svgEl
+      ? '<h2 style="color:#2f4f6f;border-bottom:1px solid #ccc;padding-bottom:.25rem;margin-top:2rem;">Ownership Diagram</h2>'
+        + '<div style="overflow-x:auto;margin:1rem 0;">'
+        + exportableSvg(svgEl).replace('<svg ', '<svg style="max-width:100%;height:auto" ')
+        + '</div>'
+      : '';
+    var win = window.open('', '_blank');
+    if(!win){ alert('Pop-up blocked. Allow pop-ups for this page and retry.'); return; }
+    win.document.write('<!DOCTYPE html><html><head><meta charset="utf-8">'
+      + '<title>' + escapeHtml(REPORT_NAME + ($('cp_name').value.trim() ? ' - ' + $('cp_name').value.trim() : '')) + '</title>'
+      + '<style>'
+      + 'body{font-family:Georgia,serif;max-width:880px;margin:0 auto;padding:2rem;color:#111;font-size:13.5px;line-height:1.55;}'
+      + 'h1{font-size:1.45rem;border-bottom:2.5px solid #1c2a33;padding-bottom:.5rem;margin-bottom:1.2rem;}'
+      + 'h2{font-size:1.05rem;color:#2f4f6f;border-bottom:1px solid #c0cdd5;padding-bottom:.25rem;margin-top:2rem;}'
+      + 'h3{font-size:.92rem;color:#334;margin-top:1.2rem;}'
+      + 'h4{font-size:.85rem;color:#445;}'
+      + 'table{border-collapse:collapse;width:100%;margin:.8rem 0;font-size:.84rem;}'
+      + 'th{background:#eef2f5;text-align:left;padding:.4rem .65rem;border:1px solid #bcc7cf;}'
+      + 'td{padding:.35rem .65rem;border:1px solid #d5dde2;vertical-align:top;}'
+      + 'hr{border:none;border-top:1px solid #c5d0d8;margin:1.5rem 0;}'
+      + 'blockquote{border-left:3px solid #7a9baa;margin:.5rem 0;padding:.3rem 1rem;color:#445;font-style:italic;}'
+      + 'pre,code{font-family:monospace;background:#f4f4f4;border-radius:3px;}'
+      + 'code{padding:.1rem .35rem;font-size:.82rem;}'
+      + 'pre{padding:.8rem;white-space:pre-wrap;font-size:.8rem;}'
+      + 'li{margin:.2rem 0;}'
+      + 'strong{font-weight:700;}'
+      + 'p{margin:.35rem 0;}'
+      + '.footer{margin-top:3rem;padding-top:1rem;border-top:1px solid #ccc;font-size:.72rem;color:#888;text-align:center;}'
+      + '.footer .made{display:inline-flex;align-items:center;gap:.4rem;margin-top:.45rem;color:#5b6b73;}'
+      + '.footer .made strong{color:#1c2a33;font-family:Georgia,serif;}.footer .made strong span{color:#2f6690;font-weight:500;}'
+      + '@media print{@page{margin:1.8cm;}body{max-width:100%;padding:0;}}'
+      + '</style></head><body>'
+      + bodyHtml
+      + diagramHtml
+      + '<div class="footer">CONFIDENTIAL — For internal compliance use only<br>'
+      +   '<span class="made"><svg width="14" height="14" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2f6690"/>'
+      +   '<path d="M11 7.5h7.5l4.5 4.5v12.5H11z M18.5 7.5V12H23" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>'
+      +   '<path d="M13.8 18.2l2.2 2.2 3.8-4.4" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      +   '<span>Prepared with <strong>Proof<span>Desk</span></strong> v' + escapeHtml(toolVersion()) + ' · printed ' + escapeHtml(printedAt()) + '</span></span></div>'
+      + '<script>window.onload=function(){window.print();};<\/script>'
+      + '</body></html>');
+    win.document.close();
+  });
+
+  // ── Save / Restore session (localStorage) ──────────────────
+  var SAVE_KEY = 'kyc_intake_v1';
+  var saveTimer = null;
+
+  function collectSession(){
+    var data = {v:1, scenario:scenario, entities:entities, redFlags:redFlags, reportInfo:reportInfo,
+                rawReportText:rawReportText, fields:{}, dk:{}};
+    document.querySelectorAll('input[id],select[id],textarea[id]').forEach(function(el){
+      if(el.type==='file') return;
+      data.fields[el.id] = (el.type==='checkbox'||el.type==='radio') ? el.checked : el.value;
+    });
+    document.querySelectorAll('[data-k]').forEach(function(el){
+      var k=el.getAttribute('data-k');
+      data.dk[k] = (el.type==='checkbox') ? el.checked : el.value;
+    });
+    return data;
+  }
+  function saveSession(){
+    var data = collectSession();
+    try{
+      localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+      var ind=$('saveIndicator'); ind.textContent='Saved';
+      ind.style.opacity='1';
+      setTimeout(function(){ ind.style.opacity='0'; }, 2200);
+    }catch(e){}
+  }
+
+  function restoreSession(data){
+    try{
+      if(!data||data.v!==1) return;
+      scenario = data.scenario||'1';
+      entities = data.entities||[];
+      redFlags = data.redFlags||[];
+      reportInfo = data.reportInfo || { invalid:false, outcome:'' };
+      rawReportText = data.rawReportText||'';
+      var btn=document.querySelector('#scenarioToggle button[data-s="'+scenario+'"]');
+      if(btn) btn.click();
+      if(data.fields) Object.keys(data.fields).forEach(function(id){
+        var el=$(id); if(!el||el.type==='file') return;
+        if(el.type==='checkbox'||el.type==='radio') el.checked=data.fields[id];
+        else el.value=data.fields[id]||'';
+      });
+      if(data.dk) Object.keys(data.dk).forEach(function(k){
+        var el=dk(k); if(!el) return;
+        if(el.type==='checkbox') el.checked=data.dk[k];
+        else el.value=data.dk[k]||'';
+      });
+      diagram.generated = linkedEntities().length > 0;
+      renderAll();
+      renderRedFlags();
+    }catch(e){}
+  }
+
+  function scheduleSave(){
+    if(saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveSession, 1500);
+  }
+
+  // Wire auto-save to all inputs
+  document.addEventListener('input', scheduleSave);
+  document.addEventListener('change', scheduleSave);
+
+  // Session restore banner
+  (function(){
+    try{
+      var raw = localStorage.getItem(SAVE_KEY);
+      if(!raw) return;
+      var data = JSON.parse(raw);
+      if(!data||data.v!==1) return;
+      var hasData = (data.entities&&data.entities.length>0)
+        || (data.fields&&data.fields['cp_name']&&data.fields['cp_name'].trim());
+      if(!hasData) return;
+      $('sessionRestoreBanner').classList.remove('hidden');
+      $('sessionRestoreBtn').addEventListener('click', function(){
+        restoreSession(data);
+        $('sessionRestoreBanner').classList.add('hidden');
+      });
+      $('sessionDiscardBtn').addEventListener('click', function(){
+        localStorage.removeItem(SAVE_KEY);
+        $('sessionRestoreBanner').classList.add('hidden');
+      });
+    }catch(e){}
+  })();
+
+  // ---------- Clear all (with undo) ----------
+  // Conditional sections follow their controlling selects; re-sync after bulk changes.
+  function syncConditionalSections(){
+    ['c2_expiration_ok','c3_expiration_mode','c3_redflags_gate','c2_gate_allacts'].forEach(function(k){
+      var el = dk(k); if(el) el.dispatchEvent(new Event('change'));
+    });
+    $('roleOtherText').disabled = !$('roleOther').checked;
+  }
+  var undoSnapshot = null, undoTimer = null;
+  function clearAll(){
+    undoSnapshot = JSON.parse(JSON.stringify(collectSession()));
+    if(saveTimer){ clearTimeout(saveTimer); saveTimer = null; }
+    entities = []; redFlags = []; actReference = {}; rawReportText = ''; rawJsonText = ''; editingEntityId = null;
+    reportInfo = { invalid:false, outcome:'' };
+    document.querySelectorAll('.wrap input, .wrap select, .wrap textarea').forEach(function(el){
+      if(el.id==='exportPreview') return;
+      if(el.type==='checkbox' || el.type==='radio') el.checked = false;
+      else if(el.tagName==='SELECT') el.selectedIndex = 0;
+      else el.value = '';
+      el.disabled = false;
+      el.classList.remove('prefilled');
+    });
+    document.querySelector('#scenarioToggle button[data-s="1"]').click();
+    ['reportUploadBox','jsonUploadBox'].forEach(function(id){ $(id).classList.remove('has-data'); });
+    ['reportStatus','jsonStatus'].forEach(function(id){ $(id).textContent = ''; });
+    ['validationBanner','suggestionBanner','sessionRestoreBanner','diagramIssues'].forEach(function(id){ $(id).classList.add('hidden'); });
+    $('exportPreview').value = 'Click "Build export package" to preview the markdown.';
+    diagram.generated = false; diagram.zoom = 'fit'; diagram.orient = 'auto';
+    document.querySelectorAll('#orientToggle button').forEach(function(b){
+      var on = b.getAttribute('data-orient')==='auto';
+      b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    cardsOpenDefault = null;
+    renderRedFlags();
+    resetEntityForm();
+    syncConditionalSections();
+    renderAll();
+    try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
+    var t = $('undoToast');
+    t.classList.remove('hidden');
+    clearTimeout(undoTimer);
+    undoTimer = setTimeout(function(){ t.classList.add('hidden'); undoSnapshot = null; }, 10000);
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'});
+    $('undoClearBtn').focus({preventScroll:true});
+  }
+  $('clearAllBtn').addEventListener('click', clearAll);
+  $('undoClearBtn').addEventListener('click', function(){
+    if(!undoSnapshot) return;
+    restoreSession(undoSnapshot);
+    renderRedFlags();
+    syncConditionalSections();
+    undoSnapshot = null;
+    clearTimeout(undoTimer);
+    $('undoToast').classList.add('hidden');
+    saveSession();
+    $('clearAllBtn').focus();
+  });
+
+  resetEntityForm();
+  renderAll();
+})();
+</script>
+</body>
+</html>

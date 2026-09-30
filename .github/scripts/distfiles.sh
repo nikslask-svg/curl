@@ -18,6 +18,7 @@ gitonly=".git*
 ^REUSE.toml
 ^SECURITY.md
 ^LICENSES/*
+^proofdesk/*
 ^docs/examples/adddocsref.pl
 ^docs/tests/CI.md
 ^docs/THANKS-filter
