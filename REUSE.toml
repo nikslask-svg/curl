@@ -42,3 +42,18 @@ SPDX-FileCopyrightText = "Daniel Stenberg, <daniel@haxx.se>, et al."
 SPDX-License-Identifier = "curl"
 # If there is licensing/copyright information in or next to these files, prefer that
 precedence = "closest"
+
+[[annotations]]
+path = [".claude/skills/emil-design-eng/**"]
+SPDX-FileCopyrightText = "Copyright (c) 2026 Emil Kowalski"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [".claude/skills/impeccable/**"]
+SPDX-FileCopyrightText = "Paul Bakaus"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = [".claude/skills/taste-skill/**"]
+SPDX-FileCopyrightText = "Copyright (c) 2026 Leonxlnx"
+SPDX-License-Identifier = "MIT"
