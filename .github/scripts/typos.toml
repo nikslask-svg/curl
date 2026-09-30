@@ -21,6 +21,7 @@ extend-ignore-re = [
 
 [files]
 extend-exclude = [
+  ".claude/skills/*",
   ".github/scripts/codespell-ignore.words",
   ".github/scripts/pyspelling.words",
   "docs/THANKS",

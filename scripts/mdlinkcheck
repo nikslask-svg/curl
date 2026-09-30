@@ -77,7 +77,7 @@ my %url;
 my %flink;
 
 # list all .md files in the repo
-my @files=`git ls-files '**.md'`;
+my @files=`git ls-files -- '**.md' ':!:.claude/skills'`;
 
 sub storelink {
     my ($f, $line, $link) = @_;
