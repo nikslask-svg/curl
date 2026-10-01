@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="version" content="21 (2026-09-30)" />
+<meta name="version" content="22 (2026-10-01)" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%232f6690%22/%3E%3Cpath%20d%3D%22M11%207.5h7.5l4.5%204.5v12.5H11z%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.8%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M18.5%207.5V12H23%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.8%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M13.8%2018.2l2.2%202.2%203.8-4.4%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E" />
+<script>try{var t=localStorage.getItem("proofdesk_theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 <title>ProofDesk · Legalization Proof & UBO review</title>
 <style>
 :root{
@@ -27,7 +28,7 @@
   --mono: ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme: dark){
-  :root{
+  :root:not([data-theme="light"]){
     --ink:#e8edf0; --paper:#12171b; --raised:#1a2126; --line:#2a343c; --line-strong:#3a4650; --muted:#8fa0a8;
     --entity:#74aed0; --entity-soft:#223642;
     --person:#dda05e; --person-soft:#3a2c1c;
@@ -38,8 +39,23 @@
     --root:#c7d2d6; --root-soft:#232c31;
     --code-bg:#0f1418; --code-ink:#cdd9e0;
     --shadow: 0 1px 2px rgba(0,0,0,.35);
+    color-scheme:dark;
   }
 }
+:root[data-theme="dark"]{
+    --ink:#e8edf0; --paper:#12171b; --raised:#1a2126; --line:#2a343c; --line-strong:#3a4650; --muted:#8fa0a8;
+    --entity:#74aed0; --entity-soft:#223642;
+    --person:#dda05e; --person-soft:#3a2c1c;
+    --ok:#63b28c; --ok-soft:#1d3128;
+    --warn:#cfa452; --warn-soft:#382c17;
+    --danger:#e08668; --danger-soft:#3a241d;
+    --purple:#b39ee0; --purple-soft:#2c2440;
+    --root:#c7d2d6; --root-soft:#232c31;
+    --code-bg:#0f1418; --code-ink:#cdd9e0;
+    --shadow: 0 1px 2px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+:root[data-theme="light"]{color-scheme:light;}
 
 /* ---------- base & browser surfaces ---------- */
 *{box-sizing:border-box;}
@@ -62,7 +78,8 @@ h1.wordmark{font-size:1.9rem;line-height:1;letter-spacing:-.02em;margin:0 0 .3re
 .brand .lede{font-size:.9rem;}
 header.page-head .version-tag{margin-left:calc(44px + .85rem);}
 @media (max-width:640px){ .brand-mark{width:38px;height:38px;} h1.wordmark{font-size:1.6rem;} header.page-head .version-tag{margin-left:0;} }
-@media (prefers-color-scheme: dark){ .bm-line,.bm-check{stroke:#0f1a20;} }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .bm-line,:root:not([data-theme="light"]) .bm-check{stroke:#0f1a20;} }
+:root[data-theme="dark"] .bm-line,:root[data-theme="dark"] .bm-check{stroke:#0f1a20;}
 /* brand banner: full-bleed image strip; content below keeps the page theme */
 header.page-head.banner{width:100vw;margin-left:calc(50% - 50vw);margin-top:-2rem;margin-bottom:1.6rem;
   padding:2.2rem max(1.4rem, calc(50vw - 660px)) 1.9rem;min-height:210px;align-items:center;
@@ -84,6 +101,15 @@ header.page-head.banner{width:100vw;margin-left:calc(50% - 50vw);margin-top:-2re
 @media print{ header.page-head.banner{background:none !important;box-shadow:none;} }
 header.page-head{margin:0 0 1.6rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;}
 .head-actions{display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;}
+.head-row{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;justify-content:flex-end;}
+.theme-seg button[aria-pressed="true"]{background:var(--raised);color:var(--ink);box-shadow:0 1px 2px rgba(28,42,51,.12), 0 0 0 1px var(--line);}
+.banner .theme-seg{background:rgba(4,13,19,.5);border-color:rgba(228,238,243,.2);backdrop-filter:blur(4px);}
+.banner .theme-seg button{color:rgba(228,238,243,.72);}
+.banner .theme-seg button[aria-pressed="true"]{background:rgba(255,255,255,.16);color:#fff;box-shadow:none;}
+/* inside the dark banner, hover always stays light (overrides the generic .seg hover) */
+@media (hover:hover) and (pointer:fine){ .banner .theme-seg button:hover,.banner .theme-seg button:not(.active):hover{color:#fff;} }
+/* desktop: switch sits under "Clear all", clear of the banner artwork */
+@media (min-width:641px){ .head-row{flex-direction:column-reverse;align-items:flex-end;gap:.55rem;} }
 button.clear-all{color:var(--danger);border-color:color-mix(in srgb, var(--danger) 40%, var(--line));}
 @media (hover:hover) and (pointer:fine){ button.clear-all:hover{background:var(--danger-soft);color:var(--danger);border-color:color-mix(in srgb, var(--danger) 60%, transparent);} }
 .notice-dialog{width:min(560px, calc(100vw - 32px));max-height:calc(100dvh - 48px);overflow:auto;border:1px solid var(--line);border-radius:var(--r-lg);
@@ -373,10 +399,17 @@ input.pct-inline{width:96px;padding:.32rem .5rem;font-size:.85rem;}
           <p class="lede">Review the Legalization Proof, map the UBOs, issue the KYC - Legalization Report.</p>
         </div>
       </div>
-      <p class="version-tag" title="Public build">v21 · 2026-09-30</p>
+      <p class="version-tag" title="Public build">v22 · 2026-10-01</p>
     </div>
     <div class="head-actions">
-      <button type="button" class="ghost clear-all" id="clearAllBtn">Clear all</button>
+      <div class="head-row">
+        <div class="seg theme-seg" id="themeToggle" role="group" aria-label="Theme">
+          <button type="button" data-theme-set="auto" aria-pressed="true" title="Follow the system setting">Auto</button>
+          <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
+          <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+        </div>
+        <button type="button" class="ghost clear-all" id="clearAllBtn">Clear all</button>
+      </div>
       <div class="undo-toast hidden" id="undoToast" role="status" aria-live="polite">
         <span>All fields cleared.</span>
         <button type="button" class="small" id="undoClearBtn">Undo</button>
@@ -3186,6 +3219,25 @@ input.pct-inline{width:96px;padding:.32rem .5rem;font-size:.85rem;}
         $('sessionRestoreBanner').classList.add('hidden');
       });
     }catch(e){}
+  })();
+
+  // ---------- theme: Auto follows the system, Light/Dark are remembered ----------
+  (function(){
+    var root = document.documentElement;
+    function current(){ return root.getAttribute('data-theme') || 'auto'; }
+    function sync(){
+      document.querySelectorAll('#themeToggle [data-theme-set]').forEach(function(b){
+        b.setAttribute('aria-pressed', b.getAttribute('data-theme-set')===current() ? 'true' : 'false');
+      });
+    }
+    $('themeToggle').addEventListener('click', function(ev){
+      var b = ev.target.closest('[data-theme-set]'); if(!b) return;
+      var t = b.getAttribute('data-theme-set');
+      if(t==='auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
+      try{ if(t==='auto') localStorage.removeItem('proofdesk_theme'); else localStorage.setItem('proofdesk_theme', t); }catch(e){}
+      sync();
+    });
+    sync();
   })();
 
   // ---------- Clear all (with undo) ----------
